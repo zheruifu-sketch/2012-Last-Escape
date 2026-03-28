@@ -10,14 +10,20 @@ public class PlayerMovementController : MonoBehaviour
     [Header("Move Settings")]
     [SerializeField] private float humanMoveSpeed = 4f;
     [SerializeField] private float carMoveSpeed = 7f;
+    [SerializeField] private float planeMoveSpeed = 6f;
+    [SerializeField] private float planeVerticalSpeed = 5f;
+    [SerializeField] private float boatMoveSpeed = 4.5f;
     [SerializeField] private float sprintMultiplier = 1.6f;
     [SerializeField] private float humanJumpForce = 9f;
     [SerializeField] private float humanGravityScale = 3f;
     [SerializeField] private float carGravityScale = 4f;
+    [SerializeField] private float planeGravityScale = 0f;
+    [SerializeField] private float boatGravityScale = 3f;
     [SerializeField] private float jumpBufferTime = GameConstants.DefaultJumpBufferTime;
     [SerializeField] private float coyoteTime = GameConstants.DefaultCoyoteTime;
 
     private float horizontalInput;
+    private float verticalInput;
     private bool sprintHeld;
     private float jumpBufferCounter;
     private float coyoteTimeCounter;
@@ -61,6 +67,17 @@ public class PlayerMovementController : MonoBehaviour
             horizontalInput += 1f;
         }
 
+        verticalInput = 0f;
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        {
+            verticalInput += 1f;
+        }
+
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            verticalInput -= 1f;
+        }
+
         sprintHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -101,6 +118,12 @@ public class PlayerMovementController : MonoBehaviour
             case PlayerFormType.Car:
                 formRoot.PlayerRigidbody.gravityScale = carGravityScale;
                 break;
+            case PlayerFormType.Plane:
+                formRoot.PlayerRigidbody.gravityScale = planeGravityScale;
+                break;
+            case PlayerFormType.Boat:
+                formRoot.PlayerRigidbody.gravityScale = boatGravityScale;
+                break;
         }
     }
 
@@ -135,6 +158,17 @@ public class PlayerMovementController : MonoBehaviour
 
             case PlayerFormType.Car:
                 velocity.x = horizontalInput * carMoveSpeed * speedMultiplier;
+                rb.velocity = velocity;
+                break;
+
+            case PlayerFormType.Plane:
+                velocity.x = horizontalInput * planeMoveSpeed * speedMultiplier;
+                velocity.y = verticalInput * planeVerticalSpeed * speedMultiplier;
+                rb.velocity = velocity;
+                break;
+
+            case PlayerFormType.Boat:
+                velocity.x = horizontalInput * boatMoveSpeed * speedMultiplier;
                 rb.velocity = velocity;
                 break;
         }
