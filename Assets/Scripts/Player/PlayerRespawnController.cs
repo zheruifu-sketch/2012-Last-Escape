@@ -136,7 +136,7 @@ public class PlayerRespawnController : MonoBehaviour
             return;
         }
 
-        if (formRoot.CurrentForm == PlayerFormType.Boat && !ruleController.IsInWater())
+        if (formRoot.CurrentForm == PlayerFormType.Boat && !ruleController.IsBoatSupportedSurface())
         {
             Respawn(FailureType.InvalidForm);
         }

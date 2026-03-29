@@ -171,7 +171,13 @@ public class PlayerMovementController : MonoBehaviour
                 break;
 
             case PlayerFormType.Boat:
-                velocity.x = horizontalInput * boatMoveSpeed * speedMultiplier;
+                float boatSpeed = boatMoveSpeed;
+                if (ruleController != null && ruleController.IsInBlizzard())
+                {
+                    boatSpeed = humanMoveSpeed * ruleController.BlizzardSlowMultiplier;
+                }
+
+                velocity.x = horizontalInput * boatSpeed * speedMultiplier;
                 rb.velocity = velocity;
                 break;
         }

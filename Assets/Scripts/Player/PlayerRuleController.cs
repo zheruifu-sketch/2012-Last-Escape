@@ -16,6 +16,7 @@ public class PlayerRuleController : MonoBehaviour
     private readonly Collider2D[] boatSwitchResults = new Collider2D[16];
 
     public float HumanSpeedMultiplier => IsInBlizzardAsHuman() ? blizzardHumanSpeedMultiplier : 1f;
+    public float BlizzardSlowMultiplier => blizzardHumanSpeedMultiplier;
 
     private void Reset()
     {
@@ -50,6 +51,11 @@ public class PlayerRuleController : MonoBehaviour
     public bool IsInBlizzard()
     {
         return zoneSensor != null && zoneSensor.IsInZone(ZoneType.Blizzard);
+    }
+
+    public bool IsBoatSupportedSurface()
+    {
+        return IsInWater() || IsInBlizzard();
     }
 
     private void HandleFormHotkeys()
@@ -96,7 +102,7 @@ public class PlayerRuleController : MonoBehaviour
 
         if (targetForm == PlayerFormType.Boat)
         {
-            return IsInWater() || CanSwitchBoatFromNearbyWater();
+            return IsBoatSupportedSurface() || CanSwitchBoatFromNearbyWater();
         }
 
         return true;
