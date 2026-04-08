@@ -40,11 +40,6 @@ public class PlayerRespawnController : MonoBehaviour
             }
         }
 
-        if (GetComponent<PlayerHealthBarUI>() == null)
-        {
-            gameObject.AddComponent<PlayerHealthBarUI>();
-        }
-
         spawnPosition = transform.position;
     }
 
