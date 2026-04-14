@@ -6,6 +6,7 @@ public class PlayerRuleController : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerFormRoot formRoot;
     [SerializeField] private PlayerZoneSensor zoneSensor;
+    [SerializeField] private GameLevelController levelController;
 
     [Header("Rules")]
     [SerializeField] private float blizzardHumanSpeedMultiplier = 0.3f;
@@ -37,6 +38,7 @@ public class PlayerRuleController : MonoBehaviour
     {
         formRoot = GetComponent<PlayerFormRoot>();
         zoneSensor = GetComponent<PlayerZoneSensor>();
+        levelController = GameLevelController.GetOrCreateInstance();
     }
 
     private void Awake()
@@ -44,6 +46,32 @@ public class PlayerRuleController : MonoBehaviour
         if (formRoot == null)
         {
             formRoot = GetComponent<PlayerFormRoot>();
+        }
+
+        if (levelController == null)
+        {
+            levelController = GameLevelController.GetOrCreateInstance();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (levelController == null)
+        {
+            levelController = GameLevelController.GetOrCreateInstance();
+        }
+
+        if (levelController != null)
+        {
+            levelController.LevelChanged += HandleLevelChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (levelController != null)
+        {
+            levelController.LevelChanged -= HandleLevelChanged;
         }
     }
 
@@ -142,6 +170,11 @@ public class PlayerRuleController : MonoBehaviour
 
     private bool CanUseForm(PlayerFormType targetForm)
     {
+        if (levelController != null && !levelController.IsFormUnlocked(targetForm))
+        {
+            return false;
+        }
+
         if (IsInCliff())
         {
             return targetForm != PlayerFormType.Boat;
@@ -164,6 +197,12 @@ public class PlayerRuleController : MonoBehaviour
     {
         if (formRoot == null)
         {
+            return;
+        }
+
+        if (levelController != null && !levelController.IsFormUnlocked(formRoot.CurrentForm))
+        {
+            formRoot.SetForm(levelController.GetFallbackUnlockedForm());
             return;
         }
 
@@ -208,5 +247,18 @@ public class PlayerRuleController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void HandleLevelChanged(int _)
+    {
+        if (formRoot == null || levelController == null)
+        {
+            return;
+        }
+
+        if (!levelController.IsFormUnlocked(formRoot.CurrentForm))
+        {
+            formRoot.SetForm(levelController.GetFallbackUnlockedForm());
+        }
     }
 }

@@ -47,6 +47,7 @@ public class PlayerHintController : MonoBehaviour
     [SerializeField] private PlayerFormRoot playerFormRoot;
     [SerializeField] private PlayerZoneSensor zoneSensor;
     [SerializeField] private PlayerHintUI hintUI;
+    [SerializeField] private GameLevelController levelController;
 
     [Header("Intro Hint")]
     [SerializeField] private bool showIntroHintOnStart = true;
@@ -118,6 +119,11 @@ public class PlayerHintController : MonoBehaviour
         {
             hintUI = FindObjectOfType<PlayerHintUI>(true);
         }
+
+        if (levelController == null)
+        {
+            levelController = GameLevelController.GetOrCreateInstance();
+        }
     }
 
     private void EnsureDefaultZoneHints()
@@ -173,7 +179,7 @@ public class PlayerHintController : MonoBehaviour
         }
 
         introHintQueued = false;
-        ShowHint(introHintMessage, introHintDuration);
+        ShowHint(ResolveIntroHintMessage(), introHintDuration);
     }
 
     private void UpdateZoneHints()
@@ -237,5 +243,41 @@ public class PlayerHintController : MonoBehaviour
         }
 
         hintUI.ShowHint(message, duration);
+    }
+
+    private string ResolveIntroHintMessage()
+    {
+        if (levelController == null)
+        {
+            return introHintMessage;
+        }
+
+        List<string> hotkeys = new List<string>();
+        if (levelController.IsFormUnlocked(PlayerFormType.Human))
+        {
+            hotkeys.Add("1-Human");
+        }
+
+        if (levelController.IsFormUnlocked(PlayerFormType.Car))
+        {
+            hotkeys.Add("2-Car");
+        }
+
+        if (levelController.IsFormUnlocked(PlayerFormType.Plane))
+        {
+            hotkeys.Add("3-Plane");
+        }
+
+        if (levelController.IsFormUnlocked(PlayerFormType.Boat))
+        {
+            hotkeys.Add("4-Boat");
+        }
+
+        if (hotkeys.Count == 0)
+        {
+            return introHintMessage;
+        }
+
+        return $"Press {string.Join(" / ", hotkeys)} to transform";
     }
 }

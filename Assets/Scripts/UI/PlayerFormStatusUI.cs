@@ -4,6 +4,7 @@ public class PlayerFormStatusUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerFormRoot playerFormRoot;
+    [SerializeField] private GameLevelController levelController;
 
     [Header("State Roots")]
     [SerializeField] private Transform humanRoot;
@@ -39,6 +40,11 @@ public class PlayerFormStatusUI : MonoBehaviour
         if (playerFormRoot == null)
         {
             playerFormRoot = FindObjectOfType<PlayerFormRoot>();
+        }
+
+        if (levelController == null)
+        {
+            levelController = GameLevelController.GetOrCreateInstance();
         }
 
         if (humanRoot == null)
@@ -91,9 +97,11 @@ public class PlayerFormStatusUI : MonoBehaviour
         PlayerFormType currentForm = playerFormRoot.CurrentForm;
         if (!force && currentForm == lastForm)
         {
+            RefreshRootVisibility();
             return;
         }
 
+        RefreshRootVisibility();
         SetVisible(humanActive, currentForm == PlayerFormType.Human);
         SetVisible(carActive, currentForm == PlayerFormType.Car);
         SetVisible(planeActive, currentForm == PlayerFormType.Plane);
@@ -109,5 +117,23 @@ public class PlayerFormStatusUI : MonoBehaviour
         }
 
         target.SetActive(visible);
+    }
+
+    private void RefreshRootVisibility()
+    {
+        SetVisible(humanRoot != null ? humanRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Human));
+        SetVisible(carRoot != null ? carRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Car));
+        SetVisible(planeRoot != null ? planeRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Plane));
+        SetVisible(boatRoot != null ? boatRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Boat));
+    }
+
+    private bool IsFormUnlocked(PlayerFormType formType)
+    {
+        if (levelController == null)
+        {
+            return true;
+        }
+
+        return levelController.IsFormUnlocked(formType);
     }
 }

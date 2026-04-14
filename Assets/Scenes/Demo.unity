@@ -1273,7 +1273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1548789097}
-  offset: {x: 0, y: 3, z: -10}
+  offset: {x: 5, y: 3, z: -10}
   smoothTime: 0.2
   followX: 1
   followY: 1
@@ -1580,7 +1580,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -138.69995, y: 28.200012}
+  m_AnchoredPosition: {x: -138.69995, y: 28.199951}
   m_SizeDelta: {x: 489.79932, y: 41.564087}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &715103999
@@ -2176,6 +2176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   formRoot: {fileID: 1548789095}
   zoneSensor: {fileID: 1548789089}
+  levelController: {fileID: 0}
   blizzardHumanSpeedMultiplier: 0.3
   transformCooldown: 1
   forceHumanWhenPlaneBlocked: 1
@@ -2228,6 +2229,8 @@ MonoBehaviour:
   boatGravityScale: 3
   jumpBufferTime: 0.15
   coyoteTime: 0.12
+  maxHumanJumpCount: 2
+  groundedVelocityThreshold: 0.1
 --- !u!114 &1548789093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2373,6 +2376,7 @@ MonoBehaviour:
   playerFormRoot: {fileID: 1548789095}
   zoneSensor: {fileID: 1548789089}
   hintUI: {fileID: 0}
+  levelController: {fileID: 0}
   showIntroHintOnStart: 1
   introHintMessage: Press 1-4 to transform
   introHintDelay: 0.6
@@ -2694,6 +2698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerFormRoot: {fileID: 1548789095}
+  levelController: {fileID: 0}
   humanRoot: {fileID: 4689608496699062835}
   carRoot: {fileID: 1782266010}
   planeRoot: {fileID: 1165356122}
@@ -2859,7 +2864,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -138.7, y: 28.2}
+  m_AnchoredPosition: {x: -138.69995, y: 28.199951}
   m_SizeDelta: {x: 489.79932, y: 41.564087}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1785627702
@@ -3034,6 +3039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1548789097}
   segmentParent: {fileID: 1841644007}
+  levelController: {fileID: 0}
   initialLeftEdgeX: 0.5
   spawnAheadDistance: 60
   destroyBehindDistance: 35

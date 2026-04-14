@@ -102,6 +102,7 @@ public class EndlessLevelGenerator : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform target;
     [SerializeField] private Transform segmentParent;
+    [SerializeField] private GameLevelController levelController;
 
     [Header("Spawn Range")]
     [SerializeField] private float initialLeftEdgeX;
@@ -130,6 +131,7 @@ public class EndlessLevelGenerator : MonoBehaviour
     {
         target = FindPlayerTransform();
         segmentParent = transform;
+        levelController = GameLevelController.GetOrCreateInstance();
         EnsureDefaultRules();
     }
 
@@ -145,8 +147,34 @@ public class EndlessLevelGenerator : MonoBehaviour
             target = FindPlayerTransform();
         }
 
+        if (levelController == null)
+        {
+            levelController = GameLevelController.GetOrCreateInstance();
+        }
+
         EnsureDefaultRules();
         InitializeRuntimeState();
+    }
+
+    private void OnEnable()
+    {
+        if (levelController == null)
+        {
+            levelController = GameLevelController.GetOrCreateInstance();
+        }
+
+        if (levelController != null)
+        {
+            levelController.LevelChanged += HandleLevelChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (levelController != null)
+        {
+            levelController.LevelChanged -= HandleLevelChanged;
+        }
     }
 
     private void Update()
@@ -272,6 +300,11 @@ public class EndlessLevelGenerator : MonoBehaviour
         {
             OpeningSegment openingSegment = openingSequence[i];
             if (openingSegment == null || openingSegment.Template == null || openingSegment.Template.Prefab == null)
+            {
+                continue;
+            }
+
+            if (!IsTemplateAllowedForCurrentLevel(openingSegment.Template))
             {
                 continue;
             }
@@ -417,6 +450,11 @@ public class EndlessLevelGenerator : MonoBehaviour
                 continue;
             }
 
+            if (!IsTemplateAllowedForCurrentLevel(rule.Template))
+            {
+                continue;
+            }
+
             if (!hasPreviousRandomRule && !rule.CanBeFirstRandomSegment)
             {
                 continue;
@@ -444,6 +482,11 @@ public class EndlessLevelGenerator : MonoBehaviour
         {
             RandomSegmentRule rule = randomRules[i];
             if (rule == null || rule.Template == null || rule.Template.Prefab == null)
+            {
+                continue;
+            }
+
+            if (!IsTemplateAllowedForCurrentLevel(rule.Template))
             {
                 continue;
             }
@@ -567,5 +610,20 @@ public class EndlessLevelGenerator : MonoBehaviour
             "Obstacle" => ZoneType.Obstacle,
             _ => ZoneType.None
         };
+    }
+
+    private bool IsTemplateAllowedForCurrentLevel(SegmentTemplate template)
+    {
+        if (levelController == null)
+        {
+            return true;
+        }
+
+        return levelController.IsZoneAllowed(ResolveZoneType(template));
+    }
+
+    private void HandleLevelChanged(int _)
+    {
+        ClearGeneratedSegments();
     }
 }
