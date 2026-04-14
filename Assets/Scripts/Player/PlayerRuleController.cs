@@ -104,6 +104,11 @@ public class PlayerRuleController : MonoBehaviour
 
     private void HandleFormHotkeys()
     {
+        if (!GameSessionState.HasActiveRun)
+        {
+            return;
+        }
+
         if (IsTransformOnCooldown)
         {
             return;

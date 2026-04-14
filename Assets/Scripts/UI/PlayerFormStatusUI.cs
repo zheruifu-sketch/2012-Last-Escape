@@ -16,6 +16,10 @@ public class PlayerFormStatusUI : MonoBehaviour
     private GameObject carActive;
     private GameObject planeActive;
     private GameObject boatActive;
+    private GameObject humanLock;
+    private GameObject carLock;
+    private GameObject planeLock;
+    private GameObject boatLock;
     private PlayerFormType lastForm = (PlayerFormType)(-1);
 
     private void Reset()
@@ -74,17 +78,26 @@ public class PlayerFormStatusUI : MonoBehaviour
         carActive = FindActiveChild(carRoot);
         planeActive = FindActiveChild(planeRoot);
         boatActive = FindActiveChild(boatRoot);
+        humanLock = FindChildObject(humanRoot, "Lock");
+        carLock = FindChildObject(carRoot, "Lock");
+        planeLock = FindChildObject(planeRoot, "Lock");
+        boatLock = FindChildObject(boatRoot, "Lock");
     }
 
     private static GameObject FindActiveChild(Transform root)
+    {
+        return FindChildObject(root, "Active");
+    }
+
+    private static GameObject FindChildObject(Transform root, string childName)
     {
         if (root == null)
         {
             return null;
         }
 
-        Transform active = root.Find("Active");
-        return active != null ? active.gameObject : null;
+        Transform child = root.Find(childName);
+        return child != null ? child.gameObject : null;
     }
 
     private void Refresh(bool force)
@@ -121,10 +134,10 @@ public class PlayerFormStatusUI : MonoBehaviour
 
     private void RefreshRootVisibility()
     {
-        SetVisible(humanRoot != null ? humanRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Human));
-        SetVisible(carRoot != null ? carRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Car));
-        SetVisible(planeRoot != null ? planeRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Plane));
-        SetVisible(boatRoot != null ? boatRoot.gameObject : null, IsFormUnlocked(PlayerFormType.Boat));
+        RefreshLock(humanLock, PlayerFormType.Human);
+        RefreshLock(carLock, PlayerFormType.Car);
+        RefreshLock(planeLock, PlayerFormType.Plane);
+        RefreshLock(boatLock, PlayerFormType.Boat);
     }
 
     private bool IsFormUnlocked(PlayerFormType formType)
@@ -135,5 +148,32 @@ public class PlayerFormStatusUI : MonoBehaviour
         }
 
         return levelController.IsFormUnlocked(formType);
+    }
+
+    private void RefreshLock(GameObject lockObject, PlayerFormType formType)
+    {
+        bool unlocked = IsFormUnlocked(formType);
+        SetVisible(lockObject, !unlocked);
+
+        if (unlocked)
+        {
+            return;
+        }
+
+        switch (formType)
+        {
+            case PlayerFormType.Human:
+                SetVisible(humanActive, false);
+                break;
+            case PlayerFormType.Car:
+                SetVisible(carActive, false);
+                break;
+            case PlayerFormType.Plane:
+                SetVisible(planeActive, false);
+                break;
+            case PlayerFormType.Boat:
+                SetVisible(boatActive, false);
+                break;
+        }
     }
 }

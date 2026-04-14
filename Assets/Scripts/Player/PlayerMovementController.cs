@@ -61,6 +61,14 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ReadInput()
     {
+        if (!GameSessionState.HasActiveRun)
+        {
+            horizontalInput = 0f;
+            verticalInput = 0f;
+            sprintHeld = false;
+            return;
+        }
+
         horizontalInput = 0f;
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {

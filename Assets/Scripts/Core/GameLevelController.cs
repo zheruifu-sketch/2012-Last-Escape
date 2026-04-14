@@ -37,6 +37,7 @@ public class GameLevelController : MonoBehaviour
 
     public static GameLevelController Instance { get; private set; }
 
+    public int LevelCount => levels.Count;
     public int CurrentLevelIndex { get; private set; }
     public int CurrentLevelNumber => CurrentLevelIndex + 1;
     public string CurrentLevelName
@@ -86,7 +87,9 @@ public class GameLevelController : MonoBehaviour
 
         Instance = this;
         EnsureDefaultLevels();
-        SetLevel(startingLevel - 1, false);
+        GameFlowController.GetOrCreateInstance();
+        int initialLevel = GameSessionState.HasActiveRun ? GameSessionState.CurrentLevelNumber : startingLevel;
+        SetLevel(initialLevel - 1, false);
     }
 
     private void OnDestroy()
@@ -129,6 +132,10 @@ public class GameLevelController : MonoBehaviour
         int clampedIndex = Mathf.Clamp(levelIndex, 0, levels.Count - 1);
         bool changed = clampedIndex != CurrentLevelIndex;
         CurrentLevelIndex = clampedIndex;
+        if (GameSessionState.HasActiveRun)
+        {
+            GameSessionState.ResumeLevel(CurrentLevelNumber);
+        }
 
         if (notifyListeners && changed)
         {
