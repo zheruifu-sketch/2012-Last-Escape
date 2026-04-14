@@ -17,15 +17,16 @@ public class GameFlowController : MonoBehaviour
     [SerializeField] private float transitionDelay = 1.25f;
 
     [Header("UI")]
+    [SerializeField] private Canvas rootCanvas;
+    [SerializeField] private GameObject startPanel;
+    [SerializeField] private TMP_Text startTitleText;
+    [SerializeField] private TMP_Text startDescriptionText;
+    [SerializeField] private Button startButton;
+    [SerializeField] private TMP_Text startButtonLabelText;
+    [SerializeField] private TMP_Text headerText;
+    [SerializeField] private TMP_Text progressText;
     [SerializeField] private string titleText = "Jump Game";
     [SerializeField] private string startButtonText = "Start";
-
-    private Canvas rootCanvas;
-    private GameObject startPanel;
-    private TMP_Text startDescriptionText;
-    private TMP_Text headerText;
-    private TMP_Text progressText;
-    private Button startButton;
     private bool isTransitioning;
     private float levelStartX;
 
@@ -61,7 +62,8 @@ public class GameFlowController : MonoBehaviour
         levelController = levelController != null ? levelController : GameLevelController.GetOrCreateInstance();
         player = player != null ? player : FindPlayerTransform();
         hintUI = hintUI != null ? hintUI : FindObjectOfType<PlayerHintUI>(true);
-        EnsureUi();
+        BindUi();
+        RefreshStaticUiText();
     }
 
     private void Start()
@@ -260,139 +262,69 @@ public class GameFlowController : MonoBehaviour
         return $"Level 1 starts with Human and Car.\nReach {targetDistance:0}m to clear the level.";
     }
 
-    private void EnsureUi()
+    private void BindUi()
     {
-        rootCanvas = FindObjectOfType<Canvas>();
+        if (rootCanvas == null)
+        {
+            rootCanvas = FindObjectOfType<Canvas>();
+        }
+
         if (rootCanvas == null)
         {
             return;
         }
 
-        CreateHeaderUi(rootCanvas.transform);
-        CreateStartPanel(rootCanvas.transform);
+        Transform canvasTransform = rootCanvas.transform;
+        startPanel = startPanel != null ? startPanel : FindChildGameObject(canvasTransform, "GameStartPanel");
+        headerText = headerText != null ? headerText : FindChildText(canvasTransform, "GameFlowHUD/LevelText");
+        progressText = progressText != null ? progressText : FindChildText(canvasTransform, "GameFlowHUD/ProgressText");
+        startTitleText = startTitleText != null ? startTitleText : FindChildText(canvasTransform, "GameStartPanel/Card/Title");
+        startDescriptionText = startDescriptionText != null ? startDescriptionText : FindChildText(canvasTransform, "GameStartPanel/Card/Description");
+        startButton = startButton != null ? startButton : FindChildButton(canvasTransform, "GameStartPanel/Card/StartButton");
+        startButtonLabelText = startButtonLabelText != null ? startButtonLabelText : FindChildText(canvasTransform, "GameStartPanel/Card/StartButton/Label");
+
+        if (startButton != null)
+        {
+            startButton.onClick.RemoveListener(BeginNewRun);
+            startButton.onClick.AddListener(BeginNewRun);
+        }
     }
 
-    private void CreateHeaderUi(Transform parent)
+    private void RefreshStaticUiText()
     {
-        GameObject headerRoot = CreateUiObject("GameFlowHUD", parent);
-        RectTransform rect = headerRoot.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.5f, 1f);
-        rect.anchorMax = new Vector2(0.5f, 1f);
-        rect.pivot = new Vector2(0.5f, 1f);
-        rect.anchoredPosition = new Vector2(0f, -28f);
-        rect.sizeDelta = new Vector2(420f, 80f);
+        if (startTitleText != null)
+        {
+            startTitleText.text = titleText;
+        }
 
-        Image background = headerRoot.AddComponent<Image>();
-        background.color = new Color(0f, 0f, 0f, 0.35f);
-
-        headerText = CreateText("LevelText", headerRoot.transform, 30, FontStyles.Bold);
-        SetStretch(headerText.rectTransform, new Vector2(18f, -8f), new Vector2(-18f, -36f));
-        headerText.alignment = TextAlignmentOptions.Center;
-
-        progressText = CreateText("ProgressText", headerRoot.transform, 24, FontStyles.Normal);
-        SetStretch(progressText.rectTransform, new Vector2(18f, -38f), new Vector2(-18f, -8f));
-        progressText.alignment = TextAlignmentOptions.Center;
-    }
-
-    private void CreateStartPanel(Transform parent)
-    {
-        startPanel = CreateUiObject("GameStartPanel", parent);
-        RectTransform rect = startPanel.GetComponent<RectTransform>();
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
-
-        Image background = startPanel.AddComponent<Image>();
-        background.color = new Color(0f, 0f, 0f, 0.72f);
-
-        GameObject card = CreateUiObject("Card", startPanel.transform);
-        RectTransform cardRect = card.GetComponent<RectTransform>();
-        cardRect.anchorMin = new Vector2(0.5f, 0.5f);
-        cardRect.anchorMax = new Vector2(0.5f, 0.5f);
-        cardRect.pivot = new Vector2(0.5f, 0.5f);
-        cardRect.sizeDelta = new Vector2(720f, 360f);
-        cardRect.anchoredPosition = Vector2.zero;
-
-        Image cardImage = card.AddComponent<Image>();
-        cardImage.color = new Color(0.08f, 0.11f, 0.16f, 0.96f);
-
-        TMP_Text title = CreateText("Title", card.transform, 48, FontStyles.Bold);
-        title.text = titleText;
-        SetRect(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -38f), new Vector2(620f, 70f));
-        title.alignment = TextAlignmentOptions.Center;
-
-        startDescriptionText = CreateText("Description", card.transform, 28, FontStyles.Normal);
-        SetRect(startDescriptionText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 14f), new Vector2(620f, 120f));
-        startDescriptionText.alignment = TextAlignmentOptions.Center;
-
-        GameObject buttonObject = CreateUiObject("StartButton", card.transform);
-        RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
-        buttonRect.anchorMin = new Vector2(0.5f, 0f);
-        buttonRect.anchorMax = new Vector2(0.5f, 0f);
-        buttonRect.pivot = new Vector2(0.5f, 0f);
-        buttonRect.anchoredPosition = new Vector2(0f, 34f);
-        buttonRect.sizeDelta = new Vector2(240f, 72f);
-
-        Image buttonImage = buttonObject.AddComponent<Image>();
-        buttonImage.color = new Color(0.12f, 0.62f, 0.98f, 1f);
-
-        startButton = buttonObject.AddComponent<Button>();
-        ColorBlock colors = startButton.colors;
-        colors.normalColor = buttonImage.color;
-        colors.highlightedColor = new Color(0.18f, 0.7f, 1f, 1f);
-        colors.pressedColor = new Color(0.08f, 0.5f, 0.86f, 1f);
-        colors.selectedColor = colors.highlightedColor;
-        startButton.colors = colors;
-        startButton.targetGraphic = buttonImage;
-        startButton.onClick.AddListener(BeginNewRun);
-
-        TMP_Text buttonLabel = CreateText("Label", buttonObject.transform, 30, FontStyles.Bold);
-        buttonLabel.text = startButtonText;
-        SetStretch(buttonLabel.rectTransform, Vector2.zero, Vector2.zero);
-        buttonLabel.alignment = TextAlignmentOptions.Center;
-    }
-
-    private static GameObject CreateUiObject(string objectName, Transform parent)
-    {
-        GameObject uiObject = new GameObject(objectName, typeof(RectTransform));
-        uiObject.transform.SetParent(parent, false);
-        return uiObject;
-    }
-
-    private static void SetRect(RectTransform rect, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 anchoredPosition, Vector2 sizeDelta)
-    {
-        rect.anchorMin = anchorMin;
-        rect.anchorMax = anchorMax;
-        rect.pivot = pivot;
-        rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = sizeDelta;
-    }
-
-    private static void SetStretch(RectTransform rect, Vector2 offsetMin, Vector2 offsetMax)
-    {
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = offsetMin;
-        rect.offsetMax = offsetMax;
-    }
-
-    private static TMP_Text CreateText(string objectName, Transform parent, float fontSize, FontStyles fontStyle)
-    {
-        GameObject textObject = CreateUiObject(objectName, parent);
-        TMP_Text text = textObject.AddComponent<TextMeshProUGUI>();
-        text.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-        text.fontSize = fontSize;
-        text.fontStyle = fontStyle;
-        text.color = Color.white;
-        text.enableWordWrapping = true;
-        return text;
+        if (startButtonLabelText != null)
+        {
+            startButtonLabelText.text = startButtonText;
+        }
     }
 
     private static Transform FindPlayerTransform()
     {
         PlayerFormRoot formRoot = FindObjectOfType<PlayerFormRoot>();
         return formRoot != null ? formRoot.transform : null;
+    }
+
+    private static GameObject FindChildGameObject(Transform root, string path)
+    {
+        Transform target = root != null ? root.Find(path) : null;
+        return target != null ? target.gameObject : null;
+    }
+
+    private static TMP_Text FindChildText(Transform root, string path)
+    {
+        Transform target = root != null ? root.Find(path) : null;
+        return target != null ? target.GetComponent<TMP_Text>() : null;
+    }
+
+    private static Button FindChildButton(Transform root, string path)
+    {
+        Transform target = root != null ? root.Find(path) : null;
+        return target != null ? target.GetComponent<Button>() : null;
     }
 
     private void HandleLevelChanged(int _)
