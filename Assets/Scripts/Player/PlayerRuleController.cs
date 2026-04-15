@@ -7,6 +7,7 @@ public class PlayerRuleController : MonoBehaviour
     [SerializeField] private PlayerFormRoot formRoot;
     [SerializeField] private PlayerZoneSensor zoneSensor;
     [SerializeField] private GameLevelController levelController;
+    [SerializeField] private GameSessionController sessionController;
 
     [Header("Rules")]
     [SerializeField] private float blizzardHumanSpeedMultiplier = 0.3f;
@@ -39,6 +40,7 @@ public class PlayerRuleController : MonoBehaviour
         formRoot = GetComponent<PlayerFormRoot>();
         zoneSensor = GetComponent<PlayerZoneSensor>();
         levelController = GameLevelController.GetOrCreateInstance();
+        sessionController = FindObjectOfType<GameSessionController>();
     }
 
     private void Awake()
@@ -51,6 +53,11 @@ public class PlayerRuleController : MonoBehaviour
         if (levelController == null)
         {
             levelController = GameLevelController.GetOrCreateInstance();
+        }
+
+        if (sessionController == null)
+        {
+            sessionController = GameSessionController.GetOrCreate();
         }
     }
 
@@ -104,7 +111,7 @@ public class PlayerRuleController : MonoBehaviour
 
     private void HandleFormHotkeys()
     {
-        if (!GameSessionState.HasActiveRun)
+        if (sessionController == null || !sessionController.HasActiveRun)
         {
             return;
         }

@@ -9,6 +9,7 @@ public class GameFlowController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameLevelController levelController;
+    [SerializeField] private GameSessionController sessionController;
     [SerializeField] private Transform player;
     [SerializeField] private PlayerHintUI hintUI;
 
@@ -60,6 +61,7 @@ public class GameFlowController : MonoBehaviour
 
         Instance = this;
         levelController = levelController != null ? levelController : GameLevelController.GetOrCreateInstance();
+        sessionController = sessionController != null ? sessionController : GameSessionController.GetOrCreate();
         player = player != null ? player : FindPlayerTransform();
         hintUI = hintUI != null ? hintUI : FindObjectOfType<PlayerHintUI>(true);
         BindUi();
@@ -71,7 +73,7 @@ public class GameFlowController : MonoBehaviour
         levelStartX = GetPlayerX();
         RefreshHeader();
 
-        if (GameSessionState.HasActiveRun)
+        if (sessionController != null && sessionController.HasActiveRun)
         {
             ResumeGameplay();
             ShowLevelHint();
@@ -98,7 +100,7 @@ public class GameFlowController : MonoBehaviour
     {
         RefreshProgressText();
 
-        if (!GameSessionState.HasActiveRun || isTransitioning)
+        if (sessionController == null || !sessionController.HasActiveRun || isTransitioning)
         {
             return;
         }
@@ -155,7 +157,11 @@ public class GameFlowController : MonoBehaviour
 
     private void BeginNewRun()
     {
-        GameSessionState.StartNewRun();
+        if (sessionController != null)
+        {
+            sessionController.StartNewRun();
+        }
+
         if (levelController != null)
         {
             levelController.SetLevel(0);
@@ -177,14 +183,22 @@ public class GameFlowController : MonoBehaviour
         {
             ShowHint($"Level {currentLevel} Clear", transitionDelay);
             yield return new WaitForSeconds(transitionDelay);
-            GameSessionState.AdvanceLevel(levelCount);
+            if (sessionController != null)
+            {
+                sessionController.AdvanceLevel(levelCount);
+            }
+
             ReloadActiveScene();
             yield break;
         }
 
         ShowHint("All Levels Clear - Restarting", transitionDelay);
         yield return new WaitForSeconds(transitionDelay);
-        GameSessionState.ResetRun();
+        if (sessionController != null)
+        {
+            sessionController.ResetRun();
+        }
+
         ReloadActiveScene();
     }
 

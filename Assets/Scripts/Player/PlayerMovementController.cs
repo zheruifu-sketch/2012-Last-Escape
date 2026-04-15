@@ -7,6 +7,7 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private PlayerFormRoot formRoot;
     [SerializeField] private PlayerGroundSensor groundSensor;
     [SerializeField] private PlayerRuleController ruleController;
+    [SerializeField] private GameSessionController sessionController;
 
     [Header("Move Settings")]
     [SerializeField] private float humanMoveSpeed = 4f;
@@ -37,6 +38,7 @@ public class PlayerMovementController : MonoBehaviour
         formRoot = GetComponent<PlayerFormRoot>();
         groundSensor = GetComponent<PlayerGroundSensor>();
         ruleController = GetComponent<PlayerRuleController>();
+        sessionController = FindObjectOfType<GameSessionController>();
     }
 
     private void Awake()
@@ -44,6 +46,11 @@ public class PlayerMovementController : MonoBehaviour
         if (formRoot == null)
         {
             formRoot = GetComponent<PlayerFormRoot>();
+        }
+
+        if (sessionController == null)
+        {
+            sessionController = GameSessionController.GetOrCreate();
         }
     }
 
@@ -61,7 +68,7 @@ public class PlayerMovementController : MonoBehaviour
 
     private void ReadInput()
     {
-        if (!GameSessionState.HasActiveRun)
+        if (sessionController == null || !sessionController.HasActiveRun)
         {
             horizontalInput = 0f;
             verticalInput = 0f;

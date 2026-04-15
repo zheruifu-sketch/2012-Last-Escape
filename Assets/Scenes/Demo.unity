@@ -160,7 +160,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 34}
+  m_AnchoredPosition: {x: 0, y: -130}
   m_SizeDelta: {x: 240, y: 72}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &3027413
@@ -1423,7 +1423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.72}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.79607844}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1715,8 +1715,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 14}
-  m_SizeDelta: {x: 620, y: 120}
+  m_AnchoredPosition: {x: 0, y: -49}
+  m_SizeDelta: {x: 620, y: 148}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &591573173
 MonoBehaviour:
@@ -2207,10 +2207,10 @@ RectTransform:
   m_Father: {fileID: 1842531542}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -38}
-  m_SizeDelta: {x: 620, y: 70}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 97.26276}
+  m_SizeDelta: {x: 961.512, y: 264.5255}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &860742493
 MonoBehaviour:
@@ -2259,8 +2259,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
-  m_fontSizeBase: 48
+  m_fontSize: 134.12
+  m_fontSizeBase: 134.12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2865,6 +2865,7 @@ MonoBehaviour:
   formRoot: {fileID: 1548789095}
   zoneSensor: {fileID: 1548789089}
   levelController: {fileID: 0}
+  sessionController: {fileID: 0}
   blizzardHumanSpeedMultiplier: 0.3
   transformCooldown: 1
   forceHumanWhenPlaneBlocked: 1
@@ -2904,6 +2905,7 @@ MonoBehaviour:
   formRoot: {fileID: 1548789095}
   groundSensor: {fileID: 1548789093}
   ruleController: {fileID: 1548789090}
+  sessionController: {fileID: 0}
   humanMoveSpeed: 4
   carMoveSpeed: 7
   planeMoveSpeed: 6
@@ -3617,7 +3619,7 @@ GameObject:
   - component: {fileID: 1812066902}
   - component: {fileID: 1812066904}
   m_Layer: 0
-  m_Name: "\u5173\u5361\u80CC\u666F"
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3721,7 +3723,7 @@ GameObject:
   - component: {fileID: 1841644008}
   - component: {fileID: 1841644009}
   m_Layer: 0
-  m_Name: "\u5173\u5361\u751F\u6210"
+  m_Name: Level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3851,6 +3853,7 @@ MonoBehaviour:
     unlockedForms: 01000000020000000400000003000000
     allowedZones: 01000000040000000200000003000000
   enableDebugHotkeys: 1
+  sessionController: {fileID: 0}
 --- !u!114 &1841644009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3864,15 +3867,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelController: {fileID: 1841644008}
+  sessionController: {fileID: 0}
   player: {fileID: 1548789097}
   hintUI: {fileID: 576621910}
   levelTargetDistances:
-  - 45
-  - 70
-  - 95
+  - 500
+  - 1000
+  - 1500
   transitionDelay: 1.25
   rootCanvas: {fileID: 0}
-  startPanel: {fileID: 0}
+  startPanel: {fileID: 478398485}
   startTitleText: {fileID: 0}
   startDescriptionText: {fileID: 0}
   startButton: {fileID: 0}
@@ -3929,21 +3933,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842531541}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08, g: 0.11, b: 0.16, a: 0.96}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 793835027ee2e1d43a7ec65f36e6d206, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

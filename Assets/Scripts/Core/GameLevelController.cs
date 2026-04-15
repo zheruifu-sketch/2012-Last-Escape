@@ -34,6 +34,7 @@ public class GameLevelController : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] private bool enableDebugHotkeys = true;
+    [SerializeField] private GameSessionController sessionController;
 
     public static GameLevelController Instance { get; private set; }
 
@@ -88,7 +89,10 @@ public class GameLevelController : MonoBehaviour
         Instance = this;
         EnsureDefaultLevels();
         GameFlowController.GetOrCreateInstance();
-        int initialLevel = GameSessionState.HasActiveRun ? GameSessionState.CurrentLevelNumber : startingLevel;
+        sessionController = sessionController != null ? sessionController : GameSessionController.GetOrCreate();
+        int initialLevel = sessionController != null && sessionController.HasActiveRun
+            ? sessionController.CurrentLevelNumber
+            : startingLevel;
         SetLevel(initialLevel - 1, false);
     }
 
@@ -132,9 +136,9 @@ public class GameLevelController : MonoBehaviour
         int clampedIndex = Mathf.Clamp(levelIndex, 0, levels.Count - 1);
         bool changed = clampedIndex != CurrentLevelIndex;
         CurrentLevelIndex = clampedIndex;
-        if (GameSessionState.HasActiveRun)
+        if (sessionController != null && sessionController.HasActiveRun)
         {
-            GameSessionState.ResumeLevel(CurrentLevelNumber);
+            sessionController.ResumeLevel(CurrentLevelNumber);
         }
 
         if (notifyListeners && changed)
