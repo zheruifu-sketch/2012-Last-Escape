@@ -26,7 +26,7 @@ MonoBehaviour:
   risingWater:
     startY: -1.85
     riseSpeed: 1
-    maxY: 1.73
+    maxY: 2
     instantKillBelowWaterLine: 0
   fallingRocks:
     spawnInterval: 2

@@ -100,7 +100,7 @@ public class GameLevelController : MonoBehaviour
 
         for (int i = 0; i < Mathf.Min(9, LevelCount); i++)
         {
-            KeyCode levelHotkey = (KeyCode)((int)KeyCode.Alpha1 + i);
+            KeyCode levelHotkey = (KeyCode)((int)KeyCode.F1 + i);
             if (Input.GetKeyDown(levelHotkey))
             {
                 SetLevel(i);

@@ -75,7 +75,8 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
-    hazards: []
+    hazards:
+    - {fileID: 11400000, guid: d361f22f1c51490291cdca2d768429c2, type: 2}
   - levelName: Level 3
     description: 'Level 3
 

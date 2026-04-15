@@ -3019,6 +3019,7 @@ MonoBehaviour:
   zoneSensor: {fileID: 1548789089}
   levelController: {fileID: 0}
   sessionController: {fileID: 0}
+  hazardController: {fileID: 0}
   blizzardHumanSpeedMultiplier: 0.3
   transformCooldown: 1
   forceHumanWhenPlaneBlocked: 1
@@ -3058,12 +3059,17 @@ MonoBehaviour:
   formRoot: {fileID: 1548789095}
   groundSensor: {fileID: 1548789093}
   ruleController: {fileID: 1548789090}
+  hazardController: {fileID: 0}
   sessionController: {fileID: 0}
   humanMoveSpeed: 4
   carMoveSpeed: 7
   planeMoveSpeed: 6
   planeVerticalSpeed: 5
   boatMoveSpeed: 4.5
+  boatFloatHeightOffset: 1
+  boatFloatVerticalSpeed: 8
+  boatFloatSnapDeadZone: 0.08
+  boatFloatActivationMargin: 0.35
   sprintMultiplier: 1.6
   humanJumpForce: 9
   humanGravityScale: 3
