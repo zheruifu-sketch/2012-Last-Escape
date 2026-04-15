@@ -41,6 +41,7 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: []
+    hazards: []
   - levelName: Level 2
     description: "Level 2\nUnlocked Forms: Human, Car, Boat\nGoal: Reach 70m."
     targetDistance: 70
@@ -74,6 +75,7 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: []
+    hazards: []
   - levelName: Level 3
     description: "Level 3\nUnlocked Forms: Human, Car, Boat, Plane\nGoal: Reach 95m."
     targetDistance: 95
@@ -115,3 +117,4 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: []
+    hazards: []

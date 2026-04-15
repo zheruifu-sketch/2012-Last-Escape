@@ -61,6 +61,7 @@ public class GameLevelController : MonoBehaviour
         Instance = this;
         progressionConfig = progressionConfig != null ? progressionConfig : GameProgressionConfig.Load();
         GameFlowController.GetOrCreateInstance();
+        LevelHazardController.GetOrCreateInstance();
         sessionController = sessionController != null ? sessionController : GameSessionController.GetOrCreate();
         int defaultStartingLevel = progressionConfig != null ? progressionConfig.DefaultStartingLevel : 1;
         int initialLevel = sessionController != null && sessionController.HasActiveRun
