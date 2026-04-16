@@ -115,4 +115,5 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
-    hazards: []
+    hazards:
+    - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}

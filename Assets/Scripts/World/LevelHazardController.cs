@@ -144,6 +144,20 @@ public class LevelHazardController : MonoBehaviour
         return false;
     }
 
+    public bool IsPointInsideGlobalWaterBody(Vector3 point, float tolerance = 0f)
+    {
+        for (int i = 0; i < activeRisingWaterHazards.Count; i++)
+        {
+            RisingWaterHazard risingWater = activeRisingWaterHazards[i];
+            if (risingWater != null && risingWater.IsPointInsideWaterBody(point, tolerance))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public bool TryGetGlobalWaterSurfaceY(out float waterSurfaceY)
     {
         bool found = false;
@@ -187,6 +201,8 @@ public class LevelHazardController : MonoBehaviour
 
         activeHazards.Add(hazardInstance);
 
+        EnsureHazardBehaviourForType(hazardInstance, hazardProfile.HazardType);
+
         LevelHazardBehaviour[] behaviours = hazardInstance.GetComponentsInChildren<LevelHazardBehaviour>(true);
         for (int i = 0; i < behaviours.Length; i++)
         {
@@ -196,6 +212,24 @@ public class LevelHazardController : MonoBehaviour
             {
                 activeRisingWaterHazards.Add(risingWaterHazard);
             }
+        }
+    }
+
+    private static void EnsureHazardBehaviourForType(GameObject hazardInstance, GameHazardType hazardType)
+    {
+        if (hazardInstance == null)
+        {
+            return;
+        }
+
+        switch (hazardType)
+        {
+            case GameHazardType.BoulderChase:
+                if (hazardInstance.GetComponentInChildren<BoulderChaseHazard>(true) == null)
+                {
+                    hazardInstance.AddComponent<BoulderChaseHazard>();
+                }
+                break;
         }
     }
 
