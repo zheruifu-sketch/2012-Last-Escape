@@ -1,0 +1,209 @@
+using System;
+using UnityEngine;
+
+[DisallowMultipleComponent]
+public class GameLevelController : MonoBehaviour
+{
+    [Header("Config")]
+    [SerializeField] private GameProgressionConfig progressionConfig;
+    [SerializeField] private GameSessionController sessionController;
+
+    public static GameLevelController Instance { get; private set; }
+
+    public int LevelCount => progressionConfig != null ? progressionConfig.LevelCount : 0;
+    public int CurrentLevelIndex { get; private set; }
+    public int CurrentLevelNumber => CurrentLevelIndex + 1;
+    public string CurrentLevelName
+    {
+        get
+        {
+            GameProgressionConfig.LevelDefinition config = GetCurrentLevelConfig();
+            return config != null && !string.IsNullOrWhiteSpace(config.LevelName)
+                ? config.LevelName
+                : $"Level {CurrentLevelNumber}";
+        }
+    }
+
+    public event Action<int> LevelChanged;
+
+    public static GameLevelController GetOrCreateInstance()
+    {
+        if (Instance != null)
+        {
+            return Instance;
+        }
+
+        GameLevelController existing = FindObjectOfType<GameLevelController>();
+        if (existing != null)
+        {
+            Instance = existing;
+            return existing;
+        }
+
+        GameObject controllerObject = new GameObject("GameLevelController");
+        return controllerObject.AddComponent<GameLevelController>();
+    }
+
+    private void Reset()
+    {
+        progressionConfig = GameProgressionConfig.Load();
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("Duplicate GameLevelController found. Destroying the new instance.", this);
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        progressionConfig = progressionConfig != null ? progressionConfig : GameProgressionConfig.Load();
+        GameFlowController.GetOrCreateInstance();
+        LevelHazardController.GetOrCreateInstance();
+        sessionController = sessionController != null ? sessionController : GameSessionController.GetOrCreate();
+        int defaultStartingLevel = progressionConfig != null ? progressionConfig.DefaultStartingLevel : 1;
+        int initialLevel = sessionController != null && sessionController.HasActiveRun
+            ? sessionController.CurrentLevelNumber
+            : defaultStartingLevel;
+        SetLevel(initialLevel - 1, false);
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (progressionConfig == null || !progressionConfig.EnableDebugHotkeys)
+        {
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            PreviousLevel();
+        }
+        else if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            NextLevel();
+        }
+        else if (Input.GetKeyDown(KeyCode.Home))
+        {
+            SetLevel(0);
+        }
+
+        for (int i = 0; i < Mathf.Min(9, LevelCount); i++)
+        {
+            KeyCode levelHotkey = (KeyCode)((int)KeyCode.F1 + i);
+            if (Input.GetKeyDown(levelHotkey))
+            {
+                SetLevel(i);
+                break;
+            }
+        }
+    }
+
+    public void SetLevel(int levelIndex, bool notifyListeners = true)
+    {
+        if (progressionConfig == null || progressionConfig.LevelCount == 0)
+        {
+            CurrentLevelIndex = 0;
+            return;
+        }
+
+        int clampedIndex = Mathf.Clamp(levelIndex, 0, progressionConfig.LevelCount - 1);
+        bool changed = clampedIndex != CurrentLevelIndex;
+        CurrentLevelIndex = clampedIndex;
+        if (sessionController != null && sessionController.HasActiveRun)
+        {
+            sessionController.ResumeLevel(CurrentLevelNumber);
+        }
+
+        if (notifyListeners && changed)
+        {
+            LevelChanged?.Invoke(CurrentLevelIndex);
+        }
+    }
+
+    public void NextLevel()
+    {
+        SetLevel(CurrentLevelIndex + 1);
+    }
+
+    public void PreviousLevel()
+    {
+        SetLevel(CurrentLevelIndex - 1);
+    }
+
+    public bool IsFormUnlocked(PlayerFormType formType)
+    {
+        return progressionConfig == null || progressionConfig.IsFormUnlocked(CurrentLevelIndex, formType);
+    }
+
+    public bool IsZoneAllowed(ZoneType zoneType)
+    {
+        return progressionConfig == null || progressionConfig.IsZoneAllowed(CurrentLevelIndex, zoneType);
+    }
+
+    public PlayerFormType GetFallbackUnlockedForm(PlayerFormType preferredForm = PlayerFormType.Human)
+    {
+        return progressionConfig != null
+            ? progressionConfig.GetFallbackUnlockedForm(CurrentLevelIndex, preferredForm)
+            : preferredForm;
+    }
+
+    public float GetCurrentTargetDistance()
+    {
+        GameProgressionConfig.LevelDefinition config = GetCurrentLevelConfig();
+        return config != null ? config.TargetDistance : 60f;
+    }
+
+    public float GetTransitionDelay()
+    {
+        return progressionConfig != null ? progressionConfig.TransitionDelay : 1.25f;
+    }
+
+    public string GetCurrentLevelDescription()
+    {
+        GameProgressionConfig.LevelDefinition config = GetCurrentLevelConfig();
+        if (config == null)
+        {
+            return string.Empty;
+        }
+
+        return config.Description;
+    }
+
+    public string GetCurrentLevelStartHint()
+    {
+        GameProgressionConfig.LevelDefinition config = GetCurrentLevelConfig();
+        if (config == null || string.IsNullOrWhiteSpace(config.StartHint))
+        {
+            return $"{CurrentLevelName} Start";
+        }
+
+        return config.StartHint;
+    }
+
+    public string GetCurrentLevelClearHint()
+    {
+        GameProgressionConfig.LevelDefinition config = GetCurrentLevelConfig();
+        if (config == null || string.IsNullOrWhiteSpace(config.ClearHint))
+        {
+            return $"{CurrentLevelName} Clear";
+        }
+
+        return config.ClearHint;
+    }
+
+    private GameProgressionConfig.LevelDefinition GetCurrentLevelConfig()
+    {
+        return progressionConfig != null ? progressionConfig.GetLevel(CurrentLevelIndex) : null;
+    }
+}

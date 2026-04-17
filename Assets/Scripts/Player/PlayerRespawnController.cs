@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerFormRoot))]
 public class PlayerRespawnController : MonoBehaviour
@@ -6,22 +7,23 @@ public class PlayerRespawnController : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerFormRoot formRoot;
     [SerializeField] private PlayerRuleController ruleController;
-
-    [Header("Respawn")]
-    [SerializeField] private PlayerFormType respawnForm = PlayerFormType.Human;
+    [SerializeField] private PlayerHealthController healthController;
+    [SerializeField] private PlayerEnergyController energyController;
+    [Header("Fall Death")]
+    [SerializeField] private bool useGlobalFallDeath = true;
     [SerializeField] private float cliffGroundY = GameConstants.DefaultCliffGroundY;
     [SerializeField] private float cliffDeathY = GameConstants.DefaultCliffDeathY;
-    [SerializeField] private float waterDeathDelay = GameConstants.DefaultWaterDeathDelay;
 
     public FailureType LastFailureType { get; private set; } = FailureType.None;
-
-    private Vector3 spawnPosition;
-    private float waterDeathTimer;
+    
+    private bool isReloadingScene;
 
     private void Reset()
     {
         formRoot = GetComponent<PlayerFormRoot>();
         ruleController = GetComponent<PlayerRuleController>();
+        healthController = GetComponent<PlayerHealthController>();
+        energyController = GetComponent<PlayerEnergyController>();
     }
 
     private void Awake()
@@ -31,14 +33,29 @@ public class PlayerRespawnController : MonoBehaviour
             formRoot = GetComponent<PlayerFormRoot>();
         }
 
-        spawnPosition = transform.position;
+        if (healthController == null)
+        {
+            healthController = GetComponent<PlayerHealthController>();
+            if (healthController == null)
+            {
+                healthController = gameObject.AddComponent<PlayerHealthController>();
+            }
+        }
+
+        if (energyController == null)
+        {
+            energyController = GetComponent<PlayerEnergyController>();
+            if (energyController == null)
+            {
+                energyController = gameObject.AddComponent<PlayerEnergyController>();
+            }
+        }
     }
 
     private void Update()
     {
-        UpdateWaterFailure();
-        UpdateCliffFailure();
-        UpdateInvalidBoatFailure();
+        UpdateEnergyAndRespawn();
+        UpdateHazardDamageAndRespawn();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -50,95 +67,149 @@ public class PlayerRespawnController : MonoBehaviour
 
         if (collision.collider.CompareTag("Obstacle"))
         {
-            Respawn(FailureType.HitObstacle);
+            if (healthController == null)
+            {
+                Respawn(FailureType.HitObstacle);
+                return;
+            }
+
+            healthController.ApplyDamage(healthController.MaxHealth);
+            if (healthController.IsDead())
+            {
+                Respawn(FailureType.HitObstacle);
+            }
             return;
         }
 
         ZoneDefinition zoneDefinition = collision.collider.GetComponent<ZoneDefinition>();
         if (zoneDefinition != null && zoneDefinition.ZoneType == ZoneType.Obstacle)
         {
-            Respawn(FailureType.HitObstacle);
+            if (healthController == null)
+            {
+                Respawn(FailureType.HitObstacle);
+                return;
+            }
+
+            healthController.ApplyDamage(healthController.MaxHealth);
+            if (healthController.IsDead())
+            {
+                Respawn(FailureType.HitObstacle);
+            }
         }
     }
 
     public void Respawn(FailureType failureType)
     {
+        if (isReloadingScene)
+        {
+            return;
+        }
+
+        Debug.Log($"[Respawn] Trigger form={GetCurrentFormLabel()} failureType={failureType}", this);
         LastFailureType = failureType;
-        waterDeathTimer = 0f;
+        isReloadingScene = true;
 
-        transform.position = spawnPosition;
-        if (formRoot != null && formRoot.PlayerRigidbody != null)
+        Scene activeScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(activeScene.buildIndex);
+    }
+
+    private void UpdateEnergyAndRespawn()
+    {
+        if (formRoot == null || energyController == null)
         {
-            formRoot.PlayerRigidbody.velocity = Vector2.zero;
-            formRoot.PlayerRigidbody.angularVelocity = 0f;
+            return;
         }
 
-        if (formRoot != null)
+        energyController.ConsumeByForm(formRoot.CurrentForm, Time.deltaTime);
+        if (energyController.IsEmpty())
         {
-            formRoot.SetForm(respawnForm);
+            Respawn(FailureType.EnergyDepleted);
         }
     }
 
-    private void UpdateWaterFailure()
+    private void UpdateHazardDamageAndRespawn()
     {
-        if (ruleController == null || formRoot == null)
+        if (formRoot == null || healthController == null)
         {
             return;
         }
 
-        if (!ruleController.IsInWater())
+        if (ruleController != null
+            && formRoot.CurrentForm == PlayerFormType.Boat
+            && ruleController.IsBoatSupportedByFlood())
         {
-            waterDeathTimer = 0f;
+            Debug.Log($"[RespawnHazard] SkipFloodDamage form={GetCurrentFormLabel()}", this);
             return;
         }
 
-        if (formRoot.CurrentForm == PlayerFormType.Boat)
+        if (TryGetActiveHazard(out FailureType failureType))
         {
-            waterDeathTimer = 0f;
-            return;
-        }
+            Debug.Log($"[RespawnHazard] ActiveHazard form={GetCurrentFormLabel()} failureType={failureType}", this);
+            if (failureType == FailureType.FellFromCliff)
+            {
+                Respawn(failureType);
+                return;
+            }
 
-        waterDeathTimer += Time.deltaTime;
-        if (waterDeathTimer >= waterDeathDelay)
-        {
-            Respawn(FailureType.FellIntoWater);
+            healthController.ApplyHazardDamage(Time.deltaTime);
+            if (healthController.IsDead())
+            {
+                Respawn(failureType);
+            }
         }
     }
 
-    private void UpdateCliffFailure()
+    private bool TryGetActiveHazard(out FailureType failureType)
     {
-        if (ruleController == null || formRoot == null)
+        if (ruleController != null
+            && formRoot != null
+            && formRoot.CurrentForm == PlayerFormType.Boat
+            && ruleController.IsBoatSupportedByFlood())
         {
-            return;
+            Debug.Log($"[RespawnHazard] FloodBoatImmune form={GetCurrentFormLabel()}", this);
+            failureType = FailureType.None;
+            return false;
         }
 
-        if (formRoot.CurrentForm == PlayerFormType.Plane || !ruleController.IsInCliff())
+        if (useGlobalFallDeath && transform.position.y <= cliffDeathY)
         {
-            return;
+            Debug.Log($"[RespawnHazard] CliffDeath form={GetCurrentFormLabel()} y={transform.position.y:F3} cliffDeathY={cliffDeathY:F3}", this);
+            failureType = FailureType.FellFromCliff;
+            return true;
         }
 
-        float currentY = transform.position.y;
-        if (currentY > cliffGroundY)
+        if (ruleController != null && formRoot.CurrentForm != PlayerFormType.Boat && ruleController.IsInWater())
         {
-            return;
+            Debug.Log($"[RespawnHazard] StaticWater form={GetCurrentFormLabel()}", this);
+            failureType = FailureType.FellIntoWater;
+            return true;
         }
 
-        if (currentY <= cliffDeathY)
+        bool isInCliffDanger = ruleController != null
+                              && formRoot.CurrentForm != PlayerFormType.Plane
+                              && ruleController.IsInCliff()
+                              && transform.position.y <= cliffGroundY
+                              && transform.position.y <= cliffDeathY;
+        if (isInCliffDanger)
         {
-            Respawn(FailureType.FellFromCliff);
+            Debug.Log($"[RespawnHazard] CliffZone form={GetCurrentFormLabel()} y={transform.position.y:F3}", this);
+            failureType = FailureType.FellFromCliff;
+            return true;
         }
+
+        if (ruleController != null && formRoot.CurrentForm == PlayerFormType.Boat && !ruleController.IsBoatSupportedSurface())
+        {
+            Debug.Log($"[RespawnHazard] BoatInvalidSurface form={GetCurrentFormLabel()} floodSupport={ruleController.IsBoatSupportedByFlood()} inFlood={ruleController.IsInFloodWater()} inWater={ruleController.IsInWater()} inBlizzard={ruleController.IsInBlizzard()}", this);
+            failureType = FailureType.InvalidForm;
+            return true;
+        }
+
+        failureType = FailureType.None;
+        return false;
     }
 
-    private void UpdateInvalidBoatFailure()
+    private string GetCurrentFormLabel()
     {
-        if (ruleController == null || formRoot == null)
-        {
-            return;
-        }
-
-        if (formRoot.CurrentForm == PlayerFormType.Boat && !ruleController.IsBoatSupportedSurface())
-        {
-            Respawn(FailureType.InvalidForm);
-        }
+        return formRoot != null ? formRoot.CurrentForm.ToString() : "Unknown";
     }
 }
