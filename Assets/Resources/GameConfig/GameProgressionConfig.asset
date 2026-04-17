@@ -42,7 +42,7 @@ MonoBehaviour:
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
     hazards:
-    - {fileID: 11400000, guid: d361f22f1c51490291cdca2d768429c2, type: 2}
+    - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
   - levelName: Level 2
     description: 'Level 2
 
@@ -117,3 +117,4 @@ MonoBehaviour:
       allowedPreviousZones: 
     hazards:
     - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}
+    - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}

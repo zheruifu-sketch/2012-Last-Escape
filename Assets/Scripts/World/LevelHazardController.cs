@@ -230,6 +230,13 @@ public class LevelHazardController : MonoBehaviour
                     hazardInstance.AddComponent<BoulderChaseHazard>();
                 }
                 break;
+
+            case GameHazardType.FallingRocks:
+                if (hazardInstance.GetComponentInChildren<FallingRocksHazard>(true) == null)
+                {
+                    hazardInstance.AddComponent<FallingRocksHazard>();
+                }
+                break;
         }
     }
 
