@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ab1575459f24a59a2d3cf13ee7154a2, type: 3}
+  m_Name: PlayerTuningConfig
+  m_EditorClassIdentifier: 
+  movement:
+    humanMoveSpeed: 4
+    carMoveSpeed: 7
+    planeMoveSpeed: 6
+    planeVerticalSpeed: 5
+    boatMoveSpeed: 4.5
+    boatFloatHeightOffset: 0.85
+    boatFloatVerticalSpeed: 8
+    boatFloatSnapDeadZone: 0.08
+    boatFloatActivationMargin: 0.35
+    sprintMultiplier: 1.6
+    humanJumpForce: 9
+    humanGravityScale: 3
+    carGravityScale: 4
+    planeGravityScale: 0
+    boatGravityScale: 3
+    jumpBufferTime: 0.15
+    coyoteTime: 0.12
+    maxHumanJumpCount: 2
+    groundedVelocityThreshold: 0.1
+  form:
+    transformCooldown: 1
+    forceHumanWhenPlaneBlocked: 1
+  environmentRules:
+    blizzardHumanSpeedMultiplier: 0.3
+    boatSwitchCheckOffset: {x: 0, y: -0.35}
+    boatSwitchCheckRadius: 0.2
+    floodBoatSupportHeight: 1.5
+  survival:
+    maxHealth: 100
+    hazardDamagePerSecond: 20
+    maxEnergy: 100
+    carEnergyCostPerSecond: 0.5
+    planeEnergyCostPerSecond: 5
+    boatEnergyCostPerSecond: 1
