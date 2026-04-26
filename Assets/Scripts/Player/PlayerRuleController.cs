@@ -5,7 +5,7 @@ public class PlayerRuleController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerFormRoot formRoot;
-    [SerializeField] private PlayerZoneSensor zoneSensor;
+    [SerializeField] private PlayerEnvironmentContext environmentContext;
     [SerializeField] private GameLevelController levelController;
     [SerializeField] private GameSessionController sessionController;
     [SerializeField] private LevelHazardController hazardController;
@@ -40,7 +40,7 @@ public class PlayerRuleController : MonoBehaviour
     private void Reset()
     {
         formRoot = GetComponent<PlayerFormRoot>();
-        zoneSensor = GetComponent<PlayerZoneSensor>();
+        environmentContext = GetComponent<PlayerEnvironmentContext>();
         levelController = GameLevelController.GetOrCreateInstance();
         sessionController = FindObjectOfType<GameSessionController>();
         hazardController = FindObjectOfType<LevelHazardController>();
@@ -51,6 +51,11 @@ public class PlayerRuleController : MonoBehaviour
         if (formRoot == null)
         {
             formRoot = GetComponent<PlayerFormRoot>();
+        }
+
+        if (environmentContext == null)
+        {
+            environmentContext = GetComponent<PlayerEnvironmentContext>();
         }
 
         if (levelController == null)
@@ -99,7 +104,7 @@ public class PlayerRuleController : MonoBehaviour
 
     public bool IsInWater()
     {
-        return zoneSensor != null && zoneSensor.IsInEnvironment(EnvironmentType.Water);
+        return environmentContext != null && environmentContext.IsInEnvironment(EnvironmentType.Water);
     }
 
     public bool IsInFloodWater()
@@ -129,12 +134,12 @@ public class PlayerRuleController : MonoBehaviour
 
     public bool IsInCliff()
     {
-        return zoneSensor != null && zoneSensor.IsInEnvironment(EnvironmentType.Cliff);
+        return environmentContext != null && environmentContext.IsInEnvironment(EnvironmentType.Cliff);
     }
 
     public bool IsInBlizzard()
     {
-        return zoneSensor != null && zoneSensor.IsInEnvironment(EnvironmentType.Blizzard);
+        return environmentContext != null && environmentContext.IsInEnvironment(EnvironmentType.Blizzard);
     }
 
     public bool IsBoatSupportedSurface()
