@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class PickupSpawner : MonoBehaviour
@@ -7,11 +8,17 @@ public class PickupSpawner : MonoBehaviour
     public static PickupSpawner Instance { get; private set; }
 
     [Header("References")]
+    [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
+    [LabelText("跑局控制器")]
     [SerializeField] private GameSessionController sessionController;
+    [LabelText("流程配置")]
     [SerializeField] private GameProgressionConfig progressionConfig;
+    [LabelText("关卡生成器")]
     [SerializeField] private EndlessLevelGenerator levelGenerator;
+    [LabelText("玩家节点")]
     [SerializeField] private Transform playerTransform;
+    [LabelText("拾取物父节点")]
     [SerializeField] private Transform pickupParent;
 
     private readonly List<GameObject> activePickups = new List<GameObject>();
@@ -206,57 +213,17 @@ public class PickupSpawner : MonoBehaviour
     private bool TryResolveRoadSpawnPosition(GameProgressionConfig.LevelDefinition.PickupSpawnSettings settings, out Vector3 spawnPosition)
     {
         spawnPosition = Vector3.zero;
-        Collider2D[] colliders = levelGenerator.GetComponentsInChildren<Collider2D>(true);
-        if (colliders == null || colliders.Length == 0)
+        if (levelGenerator == null || playerTransform == null)
         {
             return false;
         }
 
         float minX = playerTransform.position.x + settings.MinSpawnAheadDistance;
         float maxX = playerTransform.position.x + settings.MaxSpawnAheadDistance;
-        List<Collider2D> candidates = new List<Collider2D>();
-
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            Collider2D collider = colliders[i];
-            if (collider == null || !collider.enabled)
-            {
-                continue;
-            }
-
-            bool isRoad = WorldSemanticUtility.HasEnvironment(collider, EnvironmentType.Road);
-            if (!isRoad)
-            {
-                continue;
-            }
-
-            Bounds bounds = collider.bounds;
-            if (bounds.max.x < minX || bounds.min.x > maxX)
-            {
-                continue;
-            }
-
-            candidates.Add(collider);
-        }
-
-        if (candidates.Count == 0)
+        if (!levelGenerator.TryGetRandomPickupSpawnPoint(EnvironmentType.Road, minX, maxX, settings.YOffset, out spawnPosition))
         {
             return false;
         }
-
-        Collider2D selectedCollider = candidates[Random.Range(0, candidates.Count)];
-        Bounds selectedBounds = selectedCollider.bounds;
-        float spawnMinX = Mathf.Max(minX, selectedBounds.min.x + 0.75f);
-        float spawnMaxX = Mathf.Min(maxX, selectedBounds.max.x - 0.75f);
-        if (spawnMaxX <= spawnMinX)
-        {
-            return false;
-        }
-
-        spawnPosition = new Vector3(
-            Random.Range(spawnMinX, spawnMaxX),
-            selectedBounds.max.y + settings.YOffset,
-            0f);
 
         return !IsPickupTooClose(spawnPosition);
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class EndlessLevelGenerator : MonoBehaviour
@@ -9,11 +10,16 @@ public class EndlessLevelGenerator : MonoBehaviour
     [Serializable]
     private class SegmentTemplate
     {
+        [LabelText("名称")]
         [SerializeField] private string label = "Segment";
+        [LabelText("预制体")]
         [SerializeField] private GameObject prefab;
+        [LabelText("额外间距")]
         [SerializeField] private float extraSpacing;
+        [LabelText("纵向偏移")]
         [SerializeField] private float yOffset;
         [FormerlySerializedAs("zoneType")]
+        [LabelText("环境类型")]
         [SerializeField] private EnvironmentType environmentType = EnvironmentType.None;
 
         public SegmentTemplate()
@@ -39,7 +45,9 @@ public class EndlessLevelGenerator : MonoBehaviour
     [Serializable]
     private class EnvironmentSegmentEntry
     {
+        [LabelText("环境类型")]
         [SerializeField] private EnvironmentType environmentType = EnvironmentType.None;
+        [LabelText("预制体")]
         [SerializeField] private GameObject prefab;
 
         public EnvironmentSegmentEntry()
@@ -59,7 +67,9 @@ public class EndlessLevelGenerator : MonoBehaviour
     [Serializable]
     private class OpeningSegment
     {
+        [LabelText("路段模板")]
         [SerializeField] private SegmentTemplate template = new SegmentTemplate();
+        [LabelText("重复次数")]
         [SerializeField] private int repeatCount = 1;
 
         public OpeningSegment()
@@ -79,12 +89,18 @@ public class EndlessLevelGenerator : MonoBehaviour
     [Serializable]
     private class RandomSegmentRule
     {
+        [LabelText("路段模板")]
         [SerializeField] private SegmentTemplate template = new SegmentTemplate();
+        [LabelText("权重")]
         [SerializeField] private float weight = 1f;
+        [LabelText("最少连续出现次数")]
         [SerializeField] private int minConsecutiveCount = 1;
+        [LabelText("最多连续出现次数")]
         [SerializeField] private int maxConsecutiveCount = 2;
+        [LabelText("是否可作为随机段首个路段")]
         [SerializeField] private bool canBeFirstRandomSegment = true;
         [FormerlySerializedAs("allowedPreviousZones")]
+        [LabelText("允许接在这些环境后面")]
         [SerializeField] private List<EnvironmentType> allowedPreviousEnvironments = new List<EnvironmentType>();
 
         public RandomSegmentRule()
@@ -128,35 +144,51 @@ public class EndlessLevelGenerator : MonoBehaviour
     private sealed class ActiveSegment
     {
         public GameObject Instance;
+        public SegmentDescriptor Descriptor;
+        public float LeftEdgeX;
         public float RightEdgeX;
         public EnvironmentType EnvironmentType;
     }
 
     [Header("References")]
+    [LabelText("玩家目标")]
     [SerializeField] private Transform target;
+    [LabelText("路段父节点")]
     [SerializeField] private Transform segmentParent;
+    [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
+    [LabelText("流程配置")]
     [SerializeField] private GameProgressionConfig progressionConfig;
 
     [Header("Spawn Range")]
+    [LabelText("初始左边界 X")]
     [SerializeField] private float initialLeftEdgeX;
+    [LabelText("向前生成距离")]
     [SerializeField] private float spawnAheadDistance = 60f;
+    [LabelText("向后回收距离")]
     [SerializeField] private float destroyBehindDistance = 35f;
 
     [Header("Startup")]
+    [LabelText("运行时清空已有子物体")]
     [SerializeField] private bool clearChildrenOnPlay = true;
+    [LabelText("开场固定序列")]
     [SerializeField] private List<OpeningSegment> openingSequence = new List<OpeningSegment>();
 
     [Header("Segment Library")]
+    [LabelText("环境路段库")]
     [SerializeField] private List<EnvironmentSegmentEntry> segmentLibrary = new List<EnvironmentSegmentEntry>();
 
     [Header("Random Rules")]
+    [LabelText("随机生成规则")]
     [SerializeField] private List<RandomSegmentRule> randomRules = new List<RandomSegmentRule>();
+    [LabelText("随机种子")]
     [SerializeField] private int randomSeed = 230;
+    [LabelText("运行时随机化种子")]
     [SerializeField] private bool randomizeSeedOnPlay;
 
     private readonly List<ActiveSegment> activeSegments = new List<ActiveSegment>();
     private readonly Dictionary<GameObject, SegmentMeasurement> measurementCache = new Dictionary<GameObject, SegmentMeasurement>();
+    private readonly List<Transform> pickupAnchorBuffer = new List<Transform>();
 
     private System.Random rng;
     private float nextLeftEdgeX;
@@ -392,6 +424,7 @@ public class EndlessLevelGenerator : MonoBehaviour
     {
         GameObject instance = Instantiate(template.Prefab, Vector3.zero, Quaternion.identity, segmentParent);
         SegmentMeasurement measurement = MeasurePrefabInstance(template.Prefab, instance);
+        SegmentDescriptor descriptor = instance.GetComponent<SegmentDescriptor>();
         float worldY = transform.position.y + template.YOffset;
         float worldZ = transform.position.z;
 
@@ -401,11 +434,102 @@ public class EndlessLevelGenerator : MonoBehaviour
         activeSegments.Add(new ActiveSegment
         {
             Instance = instance,
+            Descriptor = descriptor,
+            LeftEdgeX = nextLeftEdgeX,
             RightEdgeX = nextLeftEdgeX + measurement.Width,
             EnvironmentType = ResolveEnvironmentType(template)
         });
 
         nextLeftEdgeX += measurement.Width + template.ExtraSpacing;
+    }
+
+    public bool TryGetRandomPickupSpawnPoint(EnvironmentType environmentType, float minX, float maxX, float yOffset, out Vector3 spawnPosition)
+    {
+        spawnPosition = Vector3.zero;
+        pickupAnchorBuffer.Clear();
+
+        for (int i = 0; i < activeSegments.Count; i++)
+        {
+            ActiveSegment segment = activeSegments[i];
+            if (segment == null || segment.Instance == null)
+            {
+                continue;
+            }
+
+            if (segment.EnvironmentType != environmentType)
+            {
+                continue;
+            }
+
+            if (segment.RightEdgeX < minX || segment.LeftEdgeX > maxX)
+            {
+                continue;
+            }
+
+            if (segment.Descriptor != null)
+            {
+                segment.Descriptor.CollectPickupAnchorsInRange(minX, maxX, pickupAnchorBuffer);
+            }
+        }
+
+        if (pickupAnchorBuffer.Count > 0)
+        {
+            Transform selectedAnchor = pickupAnchorBuffer[UnityEngine.Random.Range(0, pickupAnchorBuffer.Count)];
+            if (selectedAnchor != null)
+            {
+                spawnPosition = selectedAnchor.position + new Vector3(0f, yOffset, 0f);
+                pickupAnchorBuffer.Clear();
+                return true;
+            }
+        }
+
+        pickupAnchorBuffer.Clear();
+
+        List<ActiveSegment> fallbackSegments = new List<ActiveSegment>();
+        for (int i = 0; i < activeSegments.Count; i++)
+        {
+            ActiveSegment segment = activeSegments[i];
+            if (segment == null || segment.Instance == null)
+            {
+                continue;
+            }
+
+            if (segment.EnvironmentType != environmentType)
+            {
+                continue;
+            }
+
+            if (segment.RightEdgeX < minX || segment.LeftEdgeX > maxX)
+            {
+                continue;
+            }
+
+            fallbackSegments.Add(segment);
+        }
+
+        if (fallbackSegments.Count == 0)
+        {
+            return false;
+        }
+
+        ActiveSegment selectedSegment = fallbackSegments[UnityEngine.Random.Range(0, fallbackSegments.Count)];
+        if (!TryMeasureSurfaceBounds(selectedSegment.Instance, out Bounds bounds))
+        {
+            return false;
+        }
+
+        float spawnMinX = Mathf.Max(minX, bounds.min.x + 0.75f);
+        float spawnMaxX = Mathf.Min(maxX, bounds.max.x - 0.75f);
+        if (spawnMaxX <= spawnMinX)
+        {
+            return false;
+        }
+
+        spawnPosition = new Vector3(
+            UnityEngine.Random.Range(spawnMinX, spawnMaxX),
+            bounds.max.y + yOffset,
+            0f);
+        return true;
     }
 
     private SegmentMeasurement MeasurePrefabInstance(GameObject prefab, GameObject instance)
@@ -486,6 +610,32 @@ public class EndlessLevelGenerator : MonoBehaviour
     {
         ZoneDefinition zoneDefinition = instance.GetComponentInChildren<ZoneDefinition>(true);
         return zoneDefinition != null ? zoneDefinition.GetComponent<Collider2D>() : null;
+    }
+
+    private static bool TryMeasureSurfaceBounds(GameObject instance, out Bounds bounds)
+    {
+        Collider2D zoneCollider = FindZoneCollider(instance);
+        if (zoneCollider != null && zoneCollider.enabled)
+        {
+            bounds = zoneCollider.bounds;
+            return true;
+        }
+
+        Collider2D[] colliders = instance.GetComponentsInChildren<Collider2D>(true);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Collider2D collider = colliders[i];
+            if (collider == null || !collider.enabled)
+            {
+                continue;
+            }
+
+            bounds = collider.bounds;
+            return true;
+        }
+
+        bounds = default;
+        return false;
     }
 
     private static SegmentMeasurement MeasureFromCollider(float originX, Collider2D collider)
