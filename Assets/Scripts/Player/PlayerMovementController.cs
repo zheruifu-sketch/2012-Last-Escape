@@ -145,7 +145,7 @@ public class PlayerMovementController : MonoBehaviour
         Rigidbody2D rb = formRoot.PlayerRigidbody;
         Vector2 velocity = rb.velocity;
         PlayerTuningConfig.MovementSettings movement = tuningConfig != null ? tuningConfig.Movement : null;
-        float speedMultiplier = sprintHeld ? (movement != null ? movement.SprintMultiplier : 1.6f) : 1f;
+        float speedMultiplier = movement != null ? movement.SprintMultiplier : 1.6f;
         bool isRunning = false;
         bool shouldUseBoatFloatMode = ShouldUseBoatFloatMode();
 
