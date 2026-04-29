@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [CreateAssetMenu(fileName = "GameProgressionConfig", menuName = "JumpGame/Game Progression Config")]
 public class GameProgressionConfig : ScriptableObject
@@ -10,12 +11,18 @@ public class GameProgressionConfig : ScriptableObject
     public class ZoneGenerationRule
     {
         [FormerlySerializedAs("zoneType")]
+        [LabelText("环境类型")]
         [SerializeField] private EnvironmentType environmentType = EnvironmentType.None;
+        [LabelText("权重")]
         [SerializeField] private float weight = 1f;
+        [LabelText("最少连续出现次数")]
         [SerializeField] private int minConsecutiveCount = 1;
+        [LabelText("最多连续出现次数")]
         [SerializeField] private int maxConsecutiveCount = 2;
+        [LabelText("是否可作为随机段首个路段")]
         [SerializeField] private bool canBeFirstRandomSegment = true;
         [FormerlySerializedAs("allowedPreviousZones")]
+        [LabelText("允许接在这些环境后面")]
         [SerializeField] private List<EnvironmentType> allowedPreviousEnvironments = new List<EnvironmentType>();
 
         public EnvironmentType EnvironmentType => environmentType;
@@ -32,13 +39,21 @@ public class GameProgressionConfig : ScriptableObject
         [Serializable]
         public class PickupSpawnSettings
         {
+            [LabelText("启用拾取物生成")]
             [SerializeField] private bool enabled = true;
+            [LabelText("最小生成间距")]
             [SerializeField] private float minSpawnDistance = 14f;
+            [LabelText("生成概率")]
             [SerializeField] private float spawnChance = 0.55f;
+            [LabelText("场上最大拾取物数量")]
             [SerializeField] private int maxActivePickups = 3;
+            [LabelText("距离玩家最小前方距离")]
             [SerializeField] private float minSpawnAheadDistance = 8f;
+            [LabelText("距离玩家最大前方距离")]
             [SerializeField] private float maxSpawnAheadDistance = 18f;
+            [LabelText("生成高度偏移")]
             [SerializeField] private float yOffset = 1.1f;
+            [LabelText("可生成拾取物列表")]
             [SerializeField] private List<PickupProfile> profiles = new List<PickupProfile>();
 
             public bool Enabled => enabled;
@@ -51,18 +66,30 @@ public class GameProgressionConfig : ScriptableObject
             public List<PickupProfile> Profiles => profiles;
         }
 
+        [LabelText("关卡名称")]
         [SerializeField] private string levelName = "Level";
+        [LabelText("关卡说明")]
         [SerializeField] private string description = string.Empty;
+        [LabelText("目标距离")]
         [SerializeField] private float targetDistance = 45f;
+        [LabelText("开始提示")]
         [SerializeField] private string startHint = string.Empty;
+        [LabelText("通关提示")]
         [SerializeField] private string clearHint = string.Empty;
+        [LabelText("开场公路重复次数")]
         [SerializeField] private int openingRoadRepeatCount = 3;
+        [LabelText("环境模式定义")]
         [SerializeField] private LevelPatternDefinition patternDefinition;
+        [LabelText("解锁形态")]
         [SerializeField] private List<PlayerFormType> unlockedForms = new List<PlayerFormType>();
         [FormerlySerializedAs("allowedZones")]
+        [LabelText("允许出现的环境")]
         [SerializeField] private List<EnvironmentType> allowedEnvironments = new List<EnvironmentType>();
+        [LabelText("旧版环境生成规则")]
         [SerializeField] private List<ZoneGenerationRule> zoneGenerationRules = new List<ZoneGenerationRule>();
+        [LabelText("关卡灾害")]
         [SerializeField] private List<HazardProfile> hazards = new List<HazardProfile>();
+        [LabelText("拾取物生成")]
         [SerializeField] private PickupSpawnSettings pickups = new PickupSpawnSettings();
 
         public string LevelName => string.IsNullOrWhiteSpace(levelName) ? "Level" : levelName;
@@ -92,11 +119,15 @@ public class GameProgressionConfig : ScriptableObject
     }
 
     [Header("Flow")]
+    [LabelText("默认起始关卡")]
     [SerializeField] private int defaultStartingLevel = 1;
+    [LabelText("关卡切换延迟")]
     [SerializeField] private float transitionDelay = 1.25f;
+    [LabelText("启用调试热键")]
     [SerializeField] private bool enableDebugHotkeys = true;
 
     [Header("Levels")]
+    [LabelText("关卡列表")]
     [SerializeField] private List<LevelDefinition> levels = new List<LevelDefinition>();
 
     private static GameProgressionConfig cachedConfig;

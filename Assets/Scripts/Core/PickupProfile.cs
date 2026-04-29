@@ -1,17 +1,25 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [CreateAssetMenu(fileName = "PickupProfile", menuName = "JumpGame/Pickup Profile")]
 public class PickupProfile : ScriptableObject
 {
     [Header("Base")]
+    [LabelText("启用")]
     [SerializeField] private bool enabled = true;
+    [LabelText("显示名称")]
     [SerializeField] private string displayName = string.Empty;
+    [LabelText("拾取物类型")]
     [SerializeField] private PickupType pickupType = PickupType.Health;
+    [LabelText("拾取物预制体")]
     [SerializeField] private GameObject pickupPrefab;
 
     [Header("Effect")]
+    [LabelText("效果数值")]
     [SerializeField] private float amount = 25f;
+    [LabelText("满状态时不生成")]
     [SerializeField] private bool skipSpawnWhenStatIsFull = true;
+    [LabelText("生成权重")]
     [SerializeField] private float weight = 1f;
 
     public bool Enabled => enabled;
