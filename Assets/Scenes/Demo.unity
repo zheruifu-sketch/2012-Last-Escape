@@ -771,8 +771,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 230069087}
-  - component: {fileID: 230069089}
   - component: {fileID: 230069088}
+  - component: {fileID: 230069089}
+  - component: {fileID: 230069090}
   m_Layer: 0
   m_Name: GameFlowHUD
   m_TagString: Untagged
@@ -840,6 +841,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 230069086}
   m_CullTransparentMesh: 1
+--- !u!114 &230069090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230069086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab8868ab0624cac92d92c33b8cdbcc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelText: {fileID: 1996049714}
+  progressText: {fileID: 712127520}
 --- !u!1 &252764241
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,6 +951,7 @@ GameObject:
   - component: {fileID: 259790564}
   - component: {fileID: 259790563}
   - component: {fileID: 259790562}
+  - component: {fileID: 259790566}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1032,6 +1048,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &259790566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259790561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2073c3d3134b4032b5ae55a2de2bc4b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoRegisterChildren: 1
 --- !u!1 &263368843
 GameObject:
   m_ObjectHideFlags: 0
@@ -1369,7 +1398,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 233f34f5069f4425b04fa32787c93978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ruleController: {fileID: 1548789090}
+  runtimeContext: {fileID: 1548789101}
+  formController: {fileID: 1548789103}
   cooldownUiRoot: {fileID: 1413496097}
   fillImage: {fileID: 1785627702}
 --- !u!1 &478398485
@@ -1381,8 +1411,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 478398486}
-  - component: {fileID: 478398488}
   - component: {fileID: 478398487}
+  - component: {fileID: 478398488}
+  - component: {fileID: 478398489}
   m_Layer: 0
   m_Name: GameStartPanel
   m_TagString: Untagged
@@ -1449,6 +1480,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478398485}
   m_CullTransparentMesh: 1
+--- !u!114 &478398489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478398485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305e873047b5448bbb9aed193a616d55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleText: {fileID: 860742493}
+  descriptionText: {fileID: 591573173}
+  startButton: {fileID: 3027413}
+  startButtonText: {fileID: 1917157537}
 --- !u!1 &503631611
 GameObject:
   m_ObjectHideFlags: 0
@@ -2843,8 +2890,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1163412233}
-  - component: {fileID: 1163412235}
   - component: {fileID: 1163412234}
+  - component: {fileID: 1163412235}
+  - component: {fileID: 1163412236}
   m_Layer: 0
   m_Name: EndUI
   m_TagString: Untagged
@@ -2911,6 +2959,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1163412232}
   m_CullTransparentMesh: 1
+--- !u!114 &1163412236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1163412232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49d326d715345cf9106daeacbb43e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleText: {fileID: 962873617}
+  descriptionText: {fileID: 1638105071}
+  confirmButton: {fileID: 1682654985}
+  confirmButtonText: {fileID: 954158494}
 --- !u!1001 &1165356121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3309,6 +3373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f0a88f9915846828e0eae71d9ec6d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runtimeContext: {fileID: 1548789101}
   energyController: {fileID: 1548789099}
   fillImage: {fileID: 503631613}
 --- !u!1 &1548789088
@@ -3575,10 +3640,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27797ef53fafb6342bdf8370901726de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runtimeContext: {fileID: 1548789101}
   playerFormRoot: {fileID: 1548789095}
-  zoneSensor: {fileID: 1548789089}
-  hintUI: {fileID: 0}
-  levelController: {fileID: 0}
+  environmentContext: {fileID: 1548789089}
+  hintBarUi: {fileID: 576621910}
+  levelController: {fileID: 1841644008}
   showIntroHintOnStart: 1
   introHintMessage: Press 1-4 to transform
   introHintDelay: 0.6
@@ -4229,8 +4295,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d695abc6e11410e90420f5f2fbcb6f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runtimeContext: {fileID: 1548789101}
   playerFormRoot: {fileID: 1548789095}
-  levelController: {fileID: 0}
+  levelController: {fileID: 1841644008}
   humanRoot: {fileID: 4689608496699062835}
   carRoot: {fileID: 1782266010}
   planeRoot: {fileID: 1165356122}
@@ -4701,18 +4768,7 @@ MonoBehaviour:
   levelController: {fileID: 1841644008}
   sessionController: {fileID: 0}
   player: {fileID: 1548789097}
-  hintUI: {fileID: 576621910}
-  rootCanvas: {fileID: 0}
-  startPanel: {fileID: 478398485}
-  endPanel: {fileID: 0}
-  startTitleText: {fileID: 0}
-  startDescriptionText: {fileID: 0}
-  startButton: {fileID: 0}
-  endConfirmButton: {fileID: 0}
-  startButtonLabelText: {fileID: 0}
-  headerText: {fileID: 0}
-  progressText: {fileID: 0}
-  titleText: Jump Game
+  uiManager: {fileID: 259790566}
   startButtonText: Start
 --- !u!1 &1842531541
 GameObject:
@@ -5370,6 +5426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d8503de06c74f4e9f26efa8b66ef8cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runtimeContext: {fileID: 1548789101}
   healthController: {fileID: 1548789098}
   fillImage: {fileID: 428095841}
 --- !u!1001 &4689608496699062834

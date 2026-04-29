@@ -1,8 +1,7 @@
 using System.Collections;
-using TMPro;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 [DisallowMultipleComponent]
 public class GameFlowController : MonoBehaviour
@@ -15,22 +14,17 @@ public class GameFlowController : MonoBehaviour
     }
 
     [Header("References")]
+    [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
+    [LabelText("运行会话控制器")]
     [SerializeField] private GameSessionController sessionController;
+    [LabelText("玩家节点")]
     [SerializeField] private Transform player;
-    [SerializeField] private PlayerHintUI hintUI;
+    [LabelText("界面管理器")]
+    [SerializeField] private UIManager uiManager;
 
-    [Header("UI")]
-    [SerializeField] private Canvas rootCanvas;
-    [SerializeField] private GameObject startPanel;
-    [SerializeField] private GameObject endPanel;
-    [SerializeField] private TMP_Text startTitleText;
-    [SerializeField] private TMP_Text startDescriptionText;
-    [SerializeField] private Button startButton;
-    [SerializeField] private Button endConfirmButton;
-    [SerializeField] private TMP_Text startButtonLabelText;
-    [SerializeField] private TMP_Text headerText;
-    [SerializeField] private TMP_Text progressText;
+    [Header("Text")]
+    [LabelText("开始按钮文本")]
     [SerializeField] private string startButtonText = "Start";
     private bool isTransitioning;
     private float levelStartX;
@@ -67,13 +61,13 @@ public class GameFlowController : MonoBehaviour
         levelController = levelController != null ? levelController : GameLevelController.GetOrCreateInstance();
         sessionController = sessionController != null ? sessionController : GameSessionController.GetOrCreate();
         player = player != null ? player : FindPlayerTransform();
-        hintUI = hintUI != null ? hintUI : FindObjectOfType<PlayerHintUI>(true);
-        BindUi();
-        RefreshStaticUiText();
+        uiManager = uiManager != null ? uiManager : FindObjectOfType<UIManager>(true);
+        BindUiEvents();
     }
 
     private void Start()
     {
+        BindUiEvents();
         levelStartX = GetPlayerX();
         RefreshLevelPresentation();
 
@@ -248,24 +242,26 @@ public class GameFlowController : MonoBehaviour
 
     private void RefreshHeader()
     {
-        if (headerText == null || levelController == null)
+        LevelProgressUI levelProgressUi = GetLevelProgressUi();
+        if (levelProgressUi == null || levelController == null)
         {
             return;
         }
 
-        headerText.text = $"Level {levelController.CurrentLevelNumber} / {Mathf.Max(1, levelController.LevelCount)}";
+        levelProgressUi.SetLevelText($"Level {levelController.CurrentLevelNumber} / {Mathf.Max(1, levelController.LevelCount)}");
     }
 
     private void RefreshProgressText()
     {
-        if (progressText == null || levelController == null)
+        LevelProgressUI levelProgressUi = GetLevelProgressUi();
+        if (levelProgressUi == null || levelController == null)
         {
             return;
         }
 
         float targetDistance = GetCurrentTargetDistance();
         float currentDistance = Mathf.Clamp(GetDistanceTravelled(), 0f, targetDistance);
-        progressText.text = $"Goal {currentDistance:0}/{targetDistance:0}m";
+        levelProgressUi.SetProgressText($"Goal {currentDistance:0}/{targetDistance:0}m");
     }
 
     private float GetCurrentTargetDistance()
@@ -302,9 +298,10 @@ public class GameFlowController : MonoBehaviour
 
     private void ShowHint(string message, float duration)
     {
-        if (hintUI != null)
+        HintBarUI hintBarUi = GetHintBarUi();
+        if (hintBarUi != null)
         {
-            hintUI.ShowHint(message, duration);
+            hintBarUi.ShowHint(message, duration);
         }
     }
 
@@ -324,47 +321,25 @@ public class GameFlowController : MonoBehaviour
         return $"{levelName} 准备开始。\n到达 {targetDistance:0}m 即可过关。";
     }
 
-    private void BindUi()
+    private void BindUiEvents()
     {
-        if (rootCanvas == null)
-        {
-            rootCanvas = FindObjectOfType<Canvas>();
-        }
-
-        if (rootCanvas == null)
+        if (uiManager == null)
         {
             return;
         }
 
-        Transform canvasTransform = rootCanvas.transform;
-        startPanel = startPanel != null ? startPanel : FindChildGameObject(canvasTransform, "GameStartPanel");
-        endPanel = endPanel != null ? endPanel : FindChildGameObject(canvasTransform, "EndUI");
-        headerText = headerText != null ? headerText : FindChildText(canvasTransform, "GameFlowHUD/LevelText");
-        progressText = progressText != null ? progressText : FindChildText(canvasTransform, "GameFlowHUD/ProgressText");
-        startTitleText = startTitleText != null ? startTitleText : FindChildText(canvasTransform, "GameStartPanel/Card/Title");
-        startDescriptionText = startDescriptionText != null ? startDescriptionText : FindChildText(canvasTransform, "GameStartPanel/Card/Description");
-        startButton = startButton != null ? startButton : FindChildButton(canvasTransform, "GameStartPanel/Card/StartButton");
-        endConfirmButton = endConfirmButton != null ? endConfirmButton : FindChildButton(canvasTransform, "EndUI/Card/StartButton");
-        startButtonLabelText = startButtonLabelText != null ? startButtonLabelText : FindChildText(canvasTransform, "GameStartPanel/Card/StartButton/Label");
-
-        if (startButton != null)
+        StartPanelUI startPanelUi = uiManager.Get<StartPanelUI>();
+        if (startPanelUi != null)
         {
-            startButton.onClick.RemoveListener(BeginNewRun);
-            startButton.onClick.AddListener(BeginNewRun);
+            startPanelUi.StartRequested -= BeginNewRun;
+            startPanelUi.StartRequested += BeginNewRun;
         }
 
-        if (endConfirmButton != null)
+        ResultPanelUI resultPanelUi = uiManager.Get<ResultPanelUI>();
+        if (resultPanelUi != null)
         {
-            endConfirmButton.onClick.RemoveListener(HandleEndConfirmClicked);
-            endConfirmButton.onClick.AddListener(HandleEndConfirmClicked);
-        }
-    }
-
-    private void RefreshStaticUiText()
-    {
-        if (startButtonLabelText != null)
-        {
-            startButtonLabelText.text = startButtonText;
+            resultPanelUi.ConfirmRequested -= HandleEndConfirmClicked;
+            resultPanelUi.ConfirmRequested += HandleEndConfirmClicked;
         }
     }
 
@@ -373,21 +348,39 @@ public class GameFlowController : MonoBehaviour
         RefreshHeader();
         RefreshProgressText();
 
-        if (startTitleText != null && levelController != null)
+        StartPanelUI startPanelUi = GetStartPanelUi();
+        if (startPanelUi != null)
         {
-            startTitleText.text = levelController.CurrentLevelName;
-        }
-
-        if (startDescriptionText != null)
-        {
-            startDescriptionText.text = BuildStartDescription();
+            string title = levelController != null ? levelController.CurrentLevelName : "Level";
+            string description = BuildStartDescription();
+            startPanelUi.SetContent(title, description, startButtonText);
         }
     }
 
     private void ApplyUiState(FlowUiState uiState)
     {
-        SetActive(startPanel, uiState == FlowUiState.Start);
-        SetActive(endPanel, uiState == FlowUiState.Completed);
+        if (uiManager == null)
+        {
+            return;
+        }
+
+        if (uiState == FlowUiState.Gameplay)
+        {
+            uiManager.HideAllPanels();
+            return;
+        }
+
+        if (uiState == FlowUiState.Start)
+        {
+            uiManager.ShowOnly<StartPanelUI>();
+            return;
+        }
+
+        ResultPanelUI resultPanelUi = uiManager.ShowOnly<ResultPanelUI>();
+        if (resultPanelUi != null)
+        {
+            resultPanelUi.SetContent("Run Complete", "本次流程已经结束。", "Restart");
+        }
     }
 
     private static Transform FindPlayerTransform()
@@ -400,24 +393,6 @@ public class GameFlowController : MonoBehaviour
 
         PlayerFormRoot formRoot = FindObjectOfType<PlayerFormRoot>();
         return formRoot != null ? formRoot.transform : null;
-    }
-
-    private static GameObject FindChildGameObject(Transform root, string path)
-    {
-        Transform target = root != null ? root.Find(path) : null;
-        return target != null ? target.gameObject : null;
-    }
-
-    private static TMP_Text FindChildText(Transform root, string path)
-    {
-        Transform target = root != null ? root.Find(path) : null;
-        return target != null ? target.GetComponent<TMP_Text>() : null;
-    }
-
-    private static Button FindChildButton(Transform root, string path)
-    {
-        Transform target = root != null ? root.Find(path) : null;
-        return target != null ? target.GetComponent<Button>() : null;
     }
 
     private void HandleLevelChanged(int _)
@@ -450,11 +425,6 @@ public class GameFlowController : MonoBehaviour
             sessionController.ResetRun();
         }
 
-        if (endPanel != null)
-        {
-            endPanel.SetActive(false);
-        }
-
         ReloadActiveScene();
     }
 
@@ -476,12 +446,23 @@ public class GameFlowController : MonoBehaviour
                 break;
         }
     }
-
-    private static void SetActive(GameObject target, bool active)
+    private StartPanelUI GetStartPanelUi()
     {
-        if (target != null && target.activeSelf != active)
-        {
-            target.SetActive(active);
-        }
+        return uiManager != null ? uiManager.Get<StartPanelUI>() : null;
+    }
+
+    private ResultPanelUI GetResultPanelUi()
+    {
+        return uiManager != null ? uiManager.Get<ResultPanelUI>() : null;
+    }
+
+    private LevelProgressUI GetLevelProgressUi()
+    {
+        return uiManager != null ? uiManager.Get<LevelProgressUI>() : null;
+    }
+
+    private HintBarUI GetHintBarUi()
+    {
+        return uiManager != null ? uiManager.Get<HintBarUI>() : null;
     }
 }
