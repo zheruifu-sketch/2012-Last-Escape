@@ -1,15 +1,21 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [RequireComponent(typeof(PlayerFormRoot))]
 public class PlayerHazardResolver : MonoBehaviour
 {
     [Header("References")]
+    [LabelText("玩家形态根节点")]
     [SerializeField] private PlayerFormRoot formRoot;
+    [LabelText("环境规则控制器")]
     [SerializeField] private PlayerRuleController ruleController;
 
     [Header("Fall Death")]
+    [LabelText("使用全局坠落死亡")]
     [SerializeField] private bool useGlobalFallDeath = true;
+    [LabelText("悬崖地面高度")]
     [SerializeField] private float cliffGroundY = GameConstants.DefaultCliffGroundY;
+    [LabelText("悬崖死亡高度")]
     [SerializeField] private float cliffDeathY = GameConstants.DefaultCliffDeathY;
 
     public bool UseGlobalFallDeath => useGlobalFallDeath;

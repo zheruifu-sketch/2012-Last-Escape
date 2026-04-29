@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class PlayerEnvironmentContext : MonoBehaviour
 {
+    [LabelText("环境采样点")]
     [SerializeField] private Transform samplePoint;
 
     private readonly HashSet<EnvironmentType> sampledEnvironments = new HashSet<EnvironmentType>();

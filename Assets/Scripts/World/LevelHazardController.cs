@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class LevelHazardController : MonoBehaviour
@@ -7,9 +8,13 @@ public class LevelHazardController : MonoBehaviour
     public static LevelHazardController Instance { get; private set; }
 
     [Header("References")]
+    [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
+    [LabelText("流程配置")]
     [SerializeField] private GameProgressionConfig progressionConfig;
+    [LabelText("玩家节点")]
     [SerializeField] private Transform playerTransform;
+    [LabelText("灾害父节点")]
     [SerializeField] private Transform hazardParent;
 
     private readonly List<GameObject> activeHazards = new List<GameObject>();

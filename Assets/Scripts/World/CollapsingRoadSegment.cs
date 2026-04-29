@@ -1,20 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class CollapsingRoadSegment : MonoBehaviour
 {
     [Header("Collapse Timing")]
+    [LabelText("最短坍塌延迟")]
     [SerializeField] private float minCollapseDelay = 3f;
+    [LabelText("最长坍塌延迟")]
     [SerializeField] private float maxCollapseDelay = 5f;
+    [LabelText("最少闪烁次数")]
     [SerializeField] private int minBlinkCount = 2;
+    [LabelText("最多闪烁次数")]
     [SerializeField] private int maxBlinkCount = 3;
+    [LabelText("闪烁熄灭时长")]
     [SerializeField] private float blinkOffDuration = 0.12f;
+    [LabelText("闪烁点亮时长")]
     [SerializeField] private float blinkOnDuration = 0.12f;
 
     [Header("References")]
+    [LabelText("控制的渲染器")]
     [SerializeField] private List<Renderer> targetRenderers = new List<Renderer>();
+    [LabelText("控制的碰撞体")]
     [SerializeField] private List<Collider2D> targetColliders = new List<Collider2D>();
 
     private bool collapseStarted;

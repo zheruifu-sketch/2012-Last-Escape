@@ -1,4 +1,5 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 public class RisingWaterHazard : LevelHazardBehaviour
 {
@@ -11,9 +12,13 @@ public class RisingWaterHazard : LevelHazardBehaviour
     }
 
     [Header("Optional Overrides")]
+    [LabelText("水体表现根节点")]
     [SerializeField] private Transform waterVisualRoot;
+    [LabelText("伤害线节点")]
     [SerializeField] private Transform damageLine;
+    [LabelText("玩家安全偏移")]
     [SerializeField] private float playerClearanceOffset = 0f;
+    [LabelText("水平跟随偏移")]
     [SerializeField] private float horizontalFollowOffset = 0f;
 
     private HazardProfile hazardProfile;

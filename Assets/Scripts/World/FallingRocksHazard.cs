@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class FallingRocksHazard : LevelHazardBehaviour
@@ -13,9 +14,13 @@ public class FallingRocksHazard : LevelHazardBehaviour
     }
 
     [Header("Optional Overrides")]
+    [LabelText("表现根节点")]
     [SerializeField] private Transform visualRoot;
+    [LabelText("预警透明度")]
     [SerializeField] private float warningAlpha = 0.4f;
+    [LabelText("低于玩家多少距离后销毁")]
     [SerializeField] private float destroyBelowPlayerDistance = 12f;
+    [LabelText("命中边界扩张")]
     [SerializeField] private float hitPadding = 0.05f;
 
     private readonly List<FallingRockInstance> activeRocks = new List<FallingRockInstance>();

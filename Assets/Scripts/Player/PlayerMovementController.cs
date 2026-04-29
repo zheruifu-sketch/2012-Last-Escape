@@ -1,14 +1,21 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [RequireComponent(typeof(PlayerFormRoot))]
 public class PlayerMovementController : MonoBehaviour
 {
     [Header("References")]
+    [LabelText("玩家形态根节点")]
     [SerializeField] private PlayerFormRoot formRoot;
+    [LabelText("地面检测器")]
     [SerializeField] private PlayerGroundSensor groundSensor;
+    [LabelText("环境规则控制器")]
     [SerializeField] private PlayerRuleController ruleController;
+    [LabelText("输入读取器")]
     [SerializeField] private PlayerInputReader inputReader;
+    [LabelText("关卡灾害控制器")]
     [SerializeField] private LevelHazardController hazardController;
+    [LabelText("玩家调参配置")]
     [SerializeField] private PlayerTuningConfig tuningConfig;
 
     private float horizontalInput;

@@ -1,12 +1,17 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [RequireComponent(typeof(PlayerFormRoot))]
 public class PlayerRuleController : MonoBehaviour
 {
     [Header("References")]
+    [LabelText("玩家形态根节点")]
     [SerializeField] private PlayerFormRoot formRoot;
+    [LabelText("环境感知上下文")]
     [SerializeField] private PlayerEnvironmentContext environmentContext;
+    [LabelText("关卡灾害控制器")]
     [SerializeField] private LevelHazardController hazardController;
+    [LabelText("玩家调参配置")]
     [SerializeField] private PlayerTuningConfig tuningConfig;
 
     private readonly Collider2D[] boatSwitchResults = new Collider2D[16];

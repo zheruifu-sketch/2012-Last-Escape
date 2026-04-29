@@ -1,12 +1,17 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [DisallowMultipleComponent]
 public class BoulderChaseHazard : LevelHazardBehaviour
 {
     [Header("Optional Overrides")]
+    [LabelText("表现根节点")]
     [SerializeField] private Transform visualRoot;
+    [LabelText("命中碰撞体")]
     [SerializeField] private Collider2D hitCollider;
+    [LabelText("命中边界扩张")]
     [SerializeField] private float hitPadding = 0.1f;
+    [LabelText("备用命中半径")]
     [SerializeField] private float fallbackHitRadius = 1.25f;
 
     private HazardProfile hazardProfile;

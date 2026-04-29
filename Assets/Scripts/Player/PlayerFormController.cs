@@ -1,13 +1,19 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [RequireComponent(typeof(PlayerFormRoot))]
 public class PlayerFormController : MonoBehaviour
 {
     [Header("References")]
+    [LabelText("玩家形态根节点")]
     [SerializeField] private PlayerFormRoot formRoot;
+    [LabelText("输入读取器")]
     [SerializeField] private PlayerInputReader inputReader;
+    [LabelText("环境规则控制器")]
     [SerializeField] private PlayerRuleController ruleController;
+    [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
+    [LabelText("玩家调参配置")]
     [SerializeField] private PlayerTuningConfig tuningConfig;
 
     private float transformCooldownRemaining;

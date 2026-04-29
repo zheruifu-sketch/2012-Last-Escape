@@ -1,13 +1,17 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerFormRoot : MonoBehaviour
 {
     [Header("References")]
+    [LabelText("玩家刚体")]
     [SerializeField] private Rigidbody2D playerRigidbody;
+    [LabelText("形态表现组件")]
     [SerializeField] private PlayerFormView formView;
 
     [Header("State")]
+    [LabelText("初始形态")]
     [SerializeField] private PlayerFormType startingForm = PlayerFormType.Human;
 
     public PlayerFormType CurrentForm { get; private set; } = PlayerFormType.Human;

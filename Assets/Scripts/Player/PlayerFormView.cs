@@ -1,26 +1,40 @@
 using UnityEngine;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 
 public class PlayerFormView : MonoBehaviour
 {
     [Header("Form Objects")]
+    [LabelText("人形对象")]
     [SerializeField] private GameObject humanObject;
+    [LabelText("汽车对象")]
     [SerializeField] private GameObject carObject;
+    [LabelText("飞机对象")]
     [SerializeField] private GameObject planeObject;
+    [LabelText("船对象")]
     [SerializeField] private GameObject boatObject;
 
     [Header("Visual Targets")]
+    [LabelText("人形朝向节点")]
     [SerializeField] private Transform humanVisual;
+    [LabelText("汽车朝向节点")]
     [SerializeField] private Transform carVisual;
+    [LabelText("飞机朝向节点")]
     [SerializeField] private Transform planeVisual;
+    [LabelText("船朝向节点")]
     [SerializeField] private Transform boatVisual;
 
     [Header("Facing")]
+    [LabelText("人形默认朝左")]
     [SerializeField] private bool humanFacesLeftByDefault = true;
+    [LabelText("汽车默认朝左")]
     [SerializeField] private bool carFacesLeftByDefault = true;
+    [LabelText("飞机默认朝左")]
     [SerializeField] private bool planeFacesLeftByDefault = true;
+    [LabelText("船默认朝左")]
     [SerializeField] private bool boatFacesLeftByDefault = true;
 
     [Header("Animation")]
+    [LabelText("跑步参数名")]
     [SerializeField] private string runParameterName = "Run";
 
     private Vector3 humanScale = Vector3.one;
