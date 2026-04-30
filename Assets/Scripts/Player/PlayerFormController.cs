@@ -11,6 +11,8 @@ public class PlayerFormController : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
     [LabelText("环境规则控制器")]
     [SerializeField] private PlayerRuleController ruleController;
+    [LabelText("能量控制器")]
+    [SerializeField] private PlayerEnergyController energyController;
     [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
     [LabelText("玩家调参配置")]
@@ -60,6 +62,7 @@ public class PlayerFormController : MonoBehaviour
         formRoot = formRoot != null ? formRoot : GetComponent<PlayerFormRoot>();
         inputReader = inputReader != null ? inputReader : GetComponent<PlayerInputReader>();
         ruleController = ruleController != null ? ruleController : GetComponent<PlayerRuleController>();
+        energyController = energyController != null ? energyController : GetComponent<PlayerEnergyController>();
     }
 
     private void OnEnable()
@@ -118,6 +121,11 @@ public class PlayerFormController : MonoBehaviour
         }
 
         formRoot.SetForm(targetForm);
+        if (energyController != null)
+        {
+            energyController.ConsumeForTransform();
+        }
+
         StartTransformCooldown();
     }
 

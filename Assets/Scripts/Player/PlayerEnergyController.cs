@@ -45,6 +45,17 @@ public class PlayerEnergyController : MonoBehaviour
         Consume(consumeRate * deltaTime);
     }
 
+    public void ConsumeForTransform()
+    {
+        float transformCost = tuningConfig != null ? tuningConfig.Survival.TransformEnergyCost : GameConstants.DefaultTransformEnergyCost;
+        if (transformCost <= 0f)
+        {
+            return;
+        }
+
+        Consume(transformCost);
+    }
+
     public bool IsEmpty()
     {
         return CurrentEnergy <= 0f;

@@ -113,6 +113,8 @@ public class PlayerTuningConfig : ScriptableObject
         [SerializeField] private float planeEnergyCostPerSecond = GameConstants.DefaultPlaneEnergyCostPerSecond;
         [LabelText("船每秒能量消耗")]
         [SerializeField] private float boatEnergyCostPerSecond = GameConstants.DefaultBoatEnergyCostPerSecond;
+        [LabelText("每次变形能量消耗")]
+        [SerializeField] private float transformEnergyCost = GameConstants.DefaultTransformEnergyCost;
 
         public float MaxHealth => Mathf.Max(1f, maxHealth);
         public float HazardDamagePerSecond => Mathf.Max(0f, hazardDamagePerSecond);
@@ -120,6 +122,7 @@ public class PlayerTuningConfig : ScriptableObject
         public float CarEnergyCostPerSecond => Mathf.Max(0f, carEnergyCostPerSecond);
         public float PlaneEnergyCostPerSecond => Mathf.Max(0f, planeEnergyCostPerSecond);
         public float BoatEnergyCostPerSecond => Mathf.Max(0f, boatEnergyCostPerSecond);
+        public float TransformEnergyCost => Mathf.Max(0f, transformEnergyCost);
     }
 
     [LabelText("移动参数")]

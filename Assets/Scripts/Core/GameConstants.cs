@@ -13,6 +13,7 @@ public static class GameConstants
     public const float DefaultCarEnergyCostPerSecond = 0.5f;
     public const float DefaultPlaneEnergyCostPerSecond = 5f;
     public const float DefaultBoatEnergyCostPerSecond = 1f;
+    public const float DefaultTransformEnergyCost = 8f;
     public const float DefaultCliffGroundY = 0f;
     public const float DefaultCliffDeathY = -8f;
     public const float DefaultCameraSmoothTime = 0.12f;

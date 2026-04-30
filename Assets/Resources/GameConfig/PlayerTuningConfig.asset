@@ -33,7 +33,7 @@ MonoBehaviour:
     maxHumanJumpCount: 2
     groundedVelocityThreshold: 0.1
   form:
-    transformCooldown: 1
+    transformCooldown: 0
     forceHumanWhenPlaneBlocked: 1
   environmentRules:
     blizzardHumanSpeedMultiplier: 0.3
@@ -47,3 +47,4 @@ MonoBehaviour:
     carEnergyCostPerSecond: 0.5
     planeEnergyCostPerSecond: 5
     boatEnergyCostPerSecond: 1
+    transformEnergyCost: 4
