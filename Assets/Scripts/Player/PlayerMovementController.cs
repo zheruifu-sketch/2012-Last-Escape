@@ -20,11 +20,12 @@ public class PlayerMovementController : MonoBehaviour
 
     private float horizontalInput;
     private float verticalInput;
-    private bool sprintHeld;
     private float jumpBufferCounter;
     private float coyoteTimeCounter;
     private int humanJumpCount;
     private bool boatFloatSimulationActive;
+    private bool jumpHeld;
+    private bool jumpCutConsumed;
 
     private void Reset()
     {
@@ -74,13 +75,13 @@ public class PlayerMovementController : MonoBehaviour
         {
             horizontalInput = 0f;
             verticalInput = 0f;
-            sprintHeld = false;
+            jumpHeld = false;
             return;
         }
 
         horizontalInput = inputReader.HorizontalInput;
         verticalInput = inputReader.VerticalInput;
-        sprintHeld = inputReader.SprintHeld;
+        jumpHeld = inputReader.JumpHeld;
         if (inputReader.JumpPressedThisFrame)
         {
             jumpBufferCounter = tuningConfig != null ? tuningConfig.Movement.JumpBufferTime : GameConstants.DefaultJumpBufferTime;
@@ -89,12 +90,18 @@ public class PlayerMovementController : MonoBehaviour
 
     private void UpdateGroundTimers()
     {
+        if (groundSensor != null)
+        {
+            groundSensor.Refresh();
+        }
+
         bool grounded = IsStableGrounded();
         float coyoteTime = tuningConfig != null ? tuningConfig.Movement.CoyoteTime : GameConstants.DefaultCoyoteTime;
         if (grounded)
         {
             coyoteTimeCounter = coyoteTime;
             humanJumpCount = 0;
+            jumpCutConsumed = false;
         }
         else
         {
@@ -149,12 +156,21 @@ public class PlayerMovementController : MonoBehaviour
         bool isRunning = false;
         bool shouldUseBoatFloatMode = ShouldUseBoatFloatMode();
 
+        if (groundSensor != null)
+        {
+            groundSensor.Refresh();
+        }
+
         switch (formRoot.CurrentForm)
         {
             case PlayerFormType.Human:
                 float humanZoneMultiplier = ruleController != null ? ruleController.HumanSpeedMultiplier : 1f;
-                velocity.x = horizontalInput * (movement != null ? movement.HumanMoveSpeed : 4f) * speedMultiplier * humanZoneMultiplier;
                 bool isGrounded = IsStableGrounded();
+                velocity.x = GetSmoothedHorizontalVelocity(
+                    velocity.x,
+                    horizontalInput * (movement != null ? movement.HumanMoveSpeed : 4f) * speedMultiplier * humanZoneMultiplier,
+                    isGrounded,
+                    movement);
                 int maxHumanJumpCount = movement != null ? movement.MaxHumanJumpCount : 2;
                 bool canUseGroundJump = jumpBufferCounter > 0f && coyoteTimeCounter > 0f;
                 bool canUseAirJump = jumpBufferCounter > 0f && !isGrounded && humanJumpCount > 0 && humanJumpCount < maxHumanJumpCount;
@@ -166,16 +182,27 @@ public class PlayerMovementController : MonoBehaviour
                     humanJumpCount = Mathf.Min(maxHumanJumpCount, humanJumpCount + 1);
                     jumpBufferCounter = 0f;
                     coyoteTimeCounter = 0f;
+                    jumpCutConsumed = false;
                 }
                 else
                 {
+                    if (!jumpHeld && !jumpCutConsumed && rb.velocity.y > 0f)
+                    {
+                        velocity.y = rb.velocity.y * (movement != null ? movement.ShortJumpMultiplier : 0.45f);
+                        jumpCutConsumed = true;
+                    }
+
                     rb.velocity = velocity;
                 }
                 isRunning = Mathf.Abs(horizontalInput) > 0.01f && isGrounded;
                 break;
 
             case PlayerFormType.Car:
-                velocity.x = horizontalInput * (movement != null ? movement.CarMoveSpeed : 7f) * speedMultiplier;
+                velocity.x = GetSmoothedHorizontalVelocity(
+                    velocity.x,
+                    horizontalInput * (movement != null ? movement.CarMoveSpeed : 7f) * speedMultiplier,
+                    IsStableGrounded(),
+                    movement);
                 rb.velocity = velocity;
                 isRunning = Mathf.Abs(horizontalInput) > 0.01f;
                 break;
@@ -211,6 +238,16 @@ public class PlayerMovementController : MonoBehaviour
 
         formRoot.SetFacingFromHorizontal(horizontalInput);
         formRoot.SetRunState(isRunning);
+    }
+
+    private float GetSmoothedHorizontalVelocity(float currentVelocityX, float targetVelocityX, bool isGrounded, PlayerTuningConfig.MovementSettings movement)
+    {
+        float airControlMultiplier = movement != null ? movement.AirControlMultiplier : 0.55f;
+        float acceleration = movement != null ? movement.HorizontalAcceleration : 45f;
+        float deceleration = movement != null ? movement.HorizontalDeceleration : 60f;
+        float controlMultiplier = isGrounded ? 1f : airControlMultiplier;
+        float moveRate = Mathf.Abs(targetVelocityX) > 0.01f ? acceleration : deceleration;
+        return Mathf.MoveTowards(currentVelocityX, targetVelocityX, moveRate * controlMultiplier * Time.fixedDeltaTime);
     }
 
     private bool IsStableGrounded()

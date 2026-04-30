@@ -46,6 +46,14 @@ public class PlayerTuningConfig : ScriptableObject
         [SerializeField] private int maxHumanJumpCount = 2;
         [LabelText("落地判定纵向速度阈值")]
         [SerializeField] private float groundedVelocityThreshold = 0.1f;
+        [LabelText("水平加速度")]
+        [SerializeField] private float horizontalAcceleration = 45f;
+        [LabelText("水平减速度")]
+        [SerializeField] private float horizontalDeceleration = 60f;
+        [LabelText("空中控制倍率")]
+        [SerializeField] private float airControlMultiplier = 0.55f;
+        [LabelText("短跳倍率")]
+        [SerializeField] private float shortJumpMultiplier = 0.45f;
 
         public float HumanMoveSpeed => humanMoveSpeed;
         public float CarMoveSpeed => carMoveSpeed;
@@ -66,6 +74,10 @@ public class PlayerTuningConfig : ScriptableObject
         public float CoyoteTime => coyoteTime;
         public int MaxHumanJumpCount => Mathf.Max(1, maxHumanJumpCount);
         public float GroundedVelocityThreshold => groundedVelocityThreshold;
+        public float HorizontalAcceleration => Mathf.Max(0.01f, horizontalAcceleration);
+        public float HorizontalDeceleration => Mathf.Max(0.01f, horizontalDeceleration);
+        public float AirControlMultiplier => Mathf.Clamp01(airControlMultiplier);
+        public float ShortJumpMultiplier => Mathf.Clamp(shortJumpMultiplier, 0.1f, 1f);
     }
 
     [Serializable]

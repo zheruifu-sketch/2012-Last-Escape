@@ -11,6 +11,7 @@ public class PlayerInputReader : MonoBehaviour
     public float VerticalInput { get; private set; }
     public bool SprintHeld { get; private set; }
     public bool JumpPressedThisFrame { get; private set; }
+    public bool JumpHeld { get; private set; }
     public PlayerFormType? RequestedFormThisFrame { get; private set; }
 
     private void Reset()
@@ -36,6 +37,7 @@ public class PlayerInputReader : MonoBehaviour
             HorizontalInput = 0f;
             VerticalInput = 0f;
             SprintHeld = false;
+            JumpHeld = false;
             return;
         }
 
@@ -63,6 +65,7 @@ public class PlayerInputReader : MonoBehaviour
 
         SprintHeld = false;
         JumpPressedThisFrame = Input.GetKeyDown(KeyCode.Space);
+        JumpHeld = Input.GetKey(KeyCode.Space);
 
         if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {

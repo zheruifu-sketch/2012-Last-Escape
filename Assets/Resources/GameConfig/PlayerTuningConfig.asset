@@ -23,7 +23,7 @@ MonoBehaviour:
     boatFloatSnapDeadZone: 0.08
     boatFloatActivationMargin: 0.35
     sprintMultiplier: 1.6
-    humanJumpForce: 9
+    humanJumpForce: 12
     humanGravityScale: 3
     carGravityScale: 4
     planeGravityScale: 0
@@ -32,6 +32,10 @@ MonoBehaviour:
     coyoteTime: 0.12
     maxHumanJumpCount: 2
     groundedVelocityThreshold: 0.1
+    horizontalAcceleration: 45
+    horizontalDeceleration: 60
+    airControlMultiplier: 0.55
+    shortJumpMultiplier: 0.45
   form:
     transformCooldown: 0
     forceHumanWhenPlaneBlocked: 1
