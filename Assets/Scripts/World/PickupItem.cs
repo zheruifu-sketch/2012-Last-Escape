@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 [DisallowMultipleComponent]
 public class PickupItem : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class PickupItem : MonoBehaviour
     public void Initialize(PickupProfile pickupProfile)
     {
         this.pickupProfile = pickupProfile;
-        EnsureTriggerCollider();
     }
 
     private void Reset()
     {
-        EnsureTriggerCollider();
+        Collider2D triggerCollider = GetComponent<Collider2D>();
+        if (triggerCollider != null)
+        {
+            triggerCollider.isTrigger = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -75,19 +79,5 @@ public class PickupItem : MonoBehaviour
         }
 
         return false;
-    }
-
-    private void EnsureTriggerCollider()
-    {
-        Collider2D triggerCollider = GetComponent<Collider2D>();
-        if (triggerCollider == null)
-        {
-            CircleCollider2D circleCollider = gameObject.AddComponent<CircleCollider2D>();
-            circleCollider.radius = 2.75f;
-            circleCollider.isTrigger = true;
-            triggerCollider = circleCollider;
-        }
-
-        triggerCollider.isTrigger = true;
     }
 }
