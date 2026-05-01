@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -173,8 +173,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -217,8 +217,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Material: {fileID: 0}
   m_Color: {r: 0.12, g: 0.62, b: 0.98, a: 1}
   m_RaycastTarget: 1
@@ -550,8 +550,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Material: {fileID: 0}
   m_Color: {r: 0.5471698, g: 0.45167318, b: 0.45167318, a: 1}
   m_RaycastTarget: 1
@@ -3404,6 +3404,7 @@ GameObject:
   - component: {fileID: 1548789104}
   - component: {fileID: 1548789103}
   - component: {fileID: 1548789102}
+  - component: {fileID: 1548789105}
   - component: {fileID: 1548789101}
   - component: {fileID: 1548789098}
   - component: {fileID: 1548789099}
@@ -3687,7 +3688,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb6a364bb2647ce86d0d94f3e58db29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sessionController: {fileID: 1841644010}
+  sessionController: {fileID: 2100000003}
+--- !u!114 &1548789105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548789088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc6d959991d4a50abf57fa24bb972cc, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  playerRigidbody: {fileID: 1548789096}
+  sessionController: {fileID: 2100000003}
+  levelController: {fileID: 1841644008}
 --- !u!114 &1548789103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4608,7 +4624,6 @@ GameObject:
   - component: {fileID: 1841644006}
   - component: {fileID: 1841644008}
   - component: {fileID: 1841644009}
-  - component: {fileID: 1841644010}
   - component: {fileID: 1841644011}
   - component: {fileID: 1841644012}
   m_Layer: 0
@@ -4733,7 +4748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressionConfig: {fileID: 11400000, guid: c311a9a9ef5d4a84bb9356b46ef70011, type: 2}
-  sessionController: {fileID: 1841644010}
+  sessionController: {fileID: 2100000003}
 --- !u!114 &1841644009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4747,26 +4762,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelController: {fileID: 1841644008}
-  sessionController: {fileID: 1841644010}
+  sessionController: {fileID: 2100000003}
   player: {fileID: 1548789097}
   uiManager: {fileID: 259790566}
   startButtonText: Start
   restartButtonText: Restart
   exitButtonText: Exit Run
---- !u!114 &1841644010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1841644005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6a43a3624274cf4aa6b61c6e7a35c8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  runState: 0
-  currentLevelNumber: 1
 --- !u!114 &1841644011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4796,11 +4797,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelController: {fileID: 1841644008}
-  sessionController: {fileID: 1841644010}
+  sessionController: {fileID: 2100000003}
   progressionConfig: {fileID: 11400000, guid: c311a9a9ef5d4a84bb9356b46ef70011, type: 2}
   levelGenerator: {fileID: 1841644006}
   playerTransform: {fileID: 1548789097}
   pickupParent: {fileID: 1841644007}
+--- !u!1 &2100000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2100000002}
+  - component: {fileID: 2100000003}
+  m_Layer: 0
+  m_Name: RunSession
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2100000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2100000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a43a3624274cf4aa6b61c6e7a35c8b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  runState: 0
+  currentLevelNumber: 1
 --- !u!1 &1842531541
 GameObject:
   m_ObjectHideFlags: 0

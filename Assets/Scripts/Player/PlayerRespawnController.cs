@@ -11,6 +11,7 @@ public class PlayerRespawnController : MonoBehaviour
     [SerializeField] private PlayerHealthController healthController;
     [SerializeField] private PlayerEnergyController energyController;
     [SerializeField] private PlayerHazardResolver hazardResolver;
+    [SerializeField] private GameFlowController flowController;
 
     public FailureType LastFailureType { get; private set; } = FailureType.None;
     
@@ -32,6 +33,7 @@ public class PlayerRespawnController : MonoBehaviour
         healthController = healthController != null ? healthController : GetComponent<PlayerHealthController>();
         energyController = energyController != null ? energyController : GetComponent<PlayerEnergyController>();
         hazardResolver = hazardResolver != null ? hazardResolver : GetComponent<PlayerHazardResolver>();
+        flowController = flowController != null ? flowController : FindObjectOfType<GameFlowController>();
     }
 
     private void Update()
@@ -73,7 +75,11 @@ public class PlayerRespawnController : MonoBehaviour
 
         LastFailureType = failureType;
         hasTriggeredFailure = true;
-        GameFlowController.Instance.HandleRunFailed(failureType);
+        flowController = flowController != null ? flowController : FindObjectOfType<GameFlowController>();
+        if (flowController != null)
+        {
+            flowController.HandleRunFailed(failureType);
+        }
     }
 
     private void UpdateEnergyAndRespawn()

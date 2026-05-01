@@ -6,13 +6,6 @@ using UnityEngine.SceneManagement;
 [DisallowMultipleComponent]
 public class GameFlowController : MonoBehaviour
 {
-    private enum PendingSceneAction
-    {
-        None = 0,
-        ReturnToStart = 1,
-        RestartRun = 2
-    }
-
     private enum FlowUiState
     {
         Start = 0,
@@ -42,19 +35,8 @@ public class GameFlowController : MonoBehaviour
     private float levelStartX;
     private FailureType currentFailureType;
 
-    private static PendingSceneAction pendingSceneAction = PendingSceneAction.None;
-
-    public static GameFlowController Instance { get; private set; }
-
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
         levelController = levelController != null ? levelController : FindObjectOfType<GameLevelController>();
         sessionController = sessionController != null ? sessionController : FindObjectOfType<GameSessionController>();
         player = player != null ? player : FindPlayerTransform();
@@ -67,18 +49,6 @@ public class GameFlowController : MonoBehaviour
         BindUiEvents();
         levelStartX = GetPlayerX();
         RefreshLevelPresentation();
-
-        if (pendingSceneAction == PendingSceneAction.RestartRun)
-        {
-            pendingSceneAction = PendingSceneAction.None;
-            BeginNewRun();
-            return;
-        }
-
-        if (pendingSceneAction == PendingSceneAction.ReturnToStart)
-        {
-            pendingSceneAction = PendingSceneAction.None;
-        }
 
         if (sessionController != null && sessionController.HasActiveRun)
         {
@@ -182,14 +152,6 @@ public class GameFlowController : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-    }
-
     private void PauseForStartScreen()
     {
         Time.timeScale = 0f;
@@ -201,7 +163,9 @@ public class GameFlowController : MonoBehaviour
     {
         Time.timeScale = 1f;
         isTransitioning = false;
-        levelStartX = GetPlayerX();
+        levelStartX = sessionController != null && sessionController.HasLevelStartPosition
+            ? sessionController.LevelStartX
+            : GetPlayerX();
         ApplyUiState(FlowUiState.Gameplay);
     }
 
@@ -215,6 +179,11 @@ public class GameFlowController : MonoBehaviour
         if (levelController != null)
         {
             levelController.SetLevel(0);
+        }
+
+        if (sessionController != null)
+        {
+            sessionController.ResetRespawnToLevelStart();
         }
 
         ResumeGameplay();
@@ -282,6 +251,11 @@ public class GameFlowController : MonoBehaviour
 
     private float GetDistanceTravelled()
     {
+        if (sessionController != null)
+        {
+            return sessionController.GetTravelDistanceFromWorldX(GetPlayerX());
+        }
+
         return Mathf.Max(0f, GetPlayerX() - levelStartX);
     }
 
@@ -421,13 +395,17 @@ public class GameFlowController : MonoBehaviour
 
     private void HandleLevelChanged(int _)
     {
-        levelStartX = GetPlayerX();
+        levelStartX = sessionController != null && sessionController.HasLevelStartPosition
+            ? sessionController.LevelStartX
+            : GetPlayerX();
         RefreshLevelPresentation();
     }
 
     private void HandleRunLevelChanged(int _)
     {
-        levelStartX = GetPlayerX();
+        levelStartX = sessionController != null && sessionController.HasLevelStartPosition
+            ? sessionController.LevelStartX
+            : GetPlayerX();
         RefreshLevelPresentation();
     }
 
@@ -456,12 +434,29 @@ public class GameFlowController : MonoBehaviour
 
     private void HandleEndConfirmClicked()
     {
-        ReloadForEndAction(PendingSceneAction.RestartRun);
+        if (sessionController != null && sessionController.RunState == GameRunState.Failed)
+        {
+            sessionController.ResumeLevel(sessionController.CurrentLevelNumber);
+            ReloadActiveScene();
+            return;
+        }
+
+        if (sessionController != null)
+        {
+            sessionController.StartNewRun();
+        }
+
+        ReloadActiveScene();
     }
 
     private void HandleEndSecondaryClicked()
     {
-        ReloadForEndAction(PendingSceneAction.ReturnToStart);
+        if (sessionController != null)
+        {
+            sessionController.ResetRun();
+        }
+
+        ReloadActiveScene();
     }
 
     private void HandleRunStateChanged(GameRunState runState)
@@ -481,17 +476,6 @@ public class GameFlowController : MonoBehaviour
                 ApplyUiState(FlowUiState.Start);
                 break;
         }
-    }
-
-    private void ReloadForEndAction(PendingSceneAction sceneAction)
-    {
-        if (sessionController != null)
-        {
-            sessionController.ResetRun();
-        }
-
-        pendingSceneAction = sceneAction;
-        ReloadActiveScene();
     }
 
     private string BuildFailureDescription(FailureType failureType)
