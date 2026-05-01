@@ -352,7 +352,17 @@ public class EndlessLevelGenerator : MonoBehaviour
     private void EnsureSegmentsAhead()
     {
         float requiredRightEdge = target.position.x + spawnAheadDistance;
+        EnsureSegmentsThrough(requiredRightEdge);
+    }
 
+    public void EnsureGeneratedToWorldX(float worldX)
+    {
+        float requiredRightEdge = Mathf.Max(worldX, target != null ? target.position.x + spawnAheadDistance : worldX);
+        EnsureSegmentsThrough(requiredRightEdge);
+    }
+
+    private void EnsureSegmentsThrough(float requiredRightEdge)
+    {
         if (!openingSequenceGenerated)
         {
             GenerateOpeningSequence();
@@ -541,6 +551,92 @@ public class EndlessLevelGenerator : MonoBehaviour
     public bool TryGetRandomPickupSpawnPoint(EnvironmentType environmentType, float minX, float maxX, float yOffset, out Vector3 spawnPosition)
     {
         return TryGetRandomAnchorPoint(SegmentAnchorType.Pickup, environmentType, minX, maxX, yOffset, out spawnPosition);
+    }
+
+    public bool TryGetClosestPickupSpawnPoint(EnvironmentType environmentType, float targetX, float maxOffsetX, float yOffset, out Vector3 spawnPosition)
+    {
+        spawnPosition = Vector3.zero;
+        float minX = targetX - Mathf.Max(0f, maxOffsetX);
+        float maxX = targetX + Mathf.Max(0f, maxOffsetX);
+
+        anchorBuffer.Clear();
+        for (int i = 0; i < activeSegments.Count; i++)
+        {
+            ActiveSegment segment = activeSegments[i];
+            if (segment == null || segment.Instance == null || segment.EnvironmentType != environmentType)
+            {
+                continue;
+            }
+
+            if (segment.RightEdgeX < minX || segment.LeftEdgeX > maxX)
+            {
+                continue;
+            }
+
+            if (segment.Descriptor != null)
+            {
+                segment.Descriptor.CollectAnchorsInRange(SegmentAnchorType.Pickup, minX, maxX, anchorBuffer);
+            }
+        }
+
+        Transform closestAnchor = null;
+        float closestDistance = float.MaxValue;
+        for (int i = 0; i < anchorBuffer.Count; i++)
+        {
+            Transform anchor = anchorBuffer[i];
+            if (anchor == null)
+            {
+                continue;
+            }
+
+            float distance = Mathf.Abs(anchor.position.x - targetX);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestAnchor = anchor;
+            }
+        }
+
+        if (closestAnchor != null)
+        {
+            spawnPosition = closestAnchor.position + new Vector3(0f, yOffset, 0f);
+            anchorBuffer.Clear();
+            return true;
+        }
+
+        anchorBuffer.Clear();
+
+        ActiveSegment fallbackSegment = null;
+        float fallbackDistance = float.MaxValue;
+        for (int i = 0; i < activeSegments.Count; i++)
+        {
+            ActiveSegment segment = activeSegments[i];
+            if (segment == null || segment.Instance == null || segment.EnvironmentType != environmentType)
+            {
+                continue;
+            }
+
+            if (segment.RightEdgeX < minX || segment.LeftEdgeX > maxX)
+            {
+                continue;
+            }
+
+            float segmentDistance = Mathf.Abs(Mathf.Clamp(targetX, segment.LeftEdgeX, segment.RightEdgeX) - targetX);
+            if (segmentDistance < fallbackDistance)
+            {
+                fallbackDistance = segmentDistance;
+                fallbackSegment = segment;
+            }
+        }
+
+        if (fallbackSegment == null || !TryMeasureSurfaceBounds(fallbackSegment.Instance, out Bounds bounds))
+        {
+            return false;
+        }
+
+        float spawnX = Mathf.Clamp(targetX, bounds.min.x + 0.75f, bounds.max.x - 0.75f);
+        spawnPosition = new Vector3(spawnX, bounds.max.y + yOffset, 0f);
+        return true;
     }
 
     private SegmentMeasurement MeasurePrefabInstance(GameObject prefab, GameObject instance)

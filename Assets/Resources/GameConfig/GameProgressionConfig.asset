@@ -47,6 +47,15 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 50
+      intervalDistance: 50
+      spawnAheadDistance: 110
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13
   - levelName: Level 2
     description: 'Level 2
 
@@ -84,6 +93,15 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 60
+      intervalDistance: 60
+      spawnAheadDistance: 120
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13
   - levelName: Level 3
     description: 'Level 3
 
@@ -133,6 +151,15 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 60
+      intervalDistance: 60
+      spawnAheadDistance: 120
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13
   - levelName: Level 4
     description: 'Level 4
 
@@ -183,6 +210,15 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 75
+      intervalDistance: 75
+      spawnAheadDistance: 130
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13
   - levelName: Level 5
     description: 'Level 5
 
@@ -233,6 +269,15 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 75
+      intervalDistance: 75
+      spawnAheadDistance: 130
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13
   - levelName: Level 6
     description: 'Level 6
 
@@ -283,6 +328,15 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 80
+      intervalDistance: 80
+      spawnAheadDistance: 140
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13
   - levelName: Level 7
     description: 'Level 7
 
@@ -334,3 +388,12 @@ MonoBehaviour:
       profiles:
       - {fileID: 11400000, guid: 8aa1f23b012a43ca9dca0c98fbd68749, type: 2}
       - {fileID: 11400000, guid: 14187dc2bd3b44fb970f7c5081f3c71d, type: 2}
+    checkpoints:
+      enabled: 1
+      checkpointPrefab: {fileID: 2057589768345766926, guid: 5485f584d0c968941aed095b637c8b64, type: 3}
+      firstCheckpointDistance: 100
+      intervalDistance: 100
+      spawnAheadDistance: 150
+      skipBehindDistance: 8
+      anchorSearchHalfRange: 14
+      yOffset: -13

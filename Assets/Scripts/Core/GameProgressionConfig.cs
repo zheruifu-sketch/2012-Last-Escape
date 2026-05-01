@@ -66,6 +66,36 @@ public class GameProgressionConfig : ScriptableObject
             public List<PickupProfile> Profiles => profiles;
         }
 
+        [Serializable]
+        public class CheckpointSpawnSettings
+        {
+            [LabelText("启用检查点")]
+            [SerializeField] private bool enabled;
+            [LabelText("检查点预制体")]
+            [SerializeField] private GameObject checkpointPrefab;
+            [LabelText("首个检查点距离")]
+            [SerializeField] private float firstCheckpointDistance = 50f;
+            [LabelText("检查点间隔距离")]
+            [SerializeField] private float intervalDistance = 50f;
+            [LabelText("前方预生成距离")]
+            [SerializeField] private float spawnAheadDistance = 90f;
+            [LabelText("身后忽略距离")]
+            [SerializeField] private float skipBehindDistance = 6f;
+            [LabelText("锚点搜索半径")]
+            [SerializeField] private float anchorSearchHalfRange = 12f;
+            [LabelText("生成高度偏移")]
+            [SerializeField] private float yOffset = 1.1f;
+
+            public bool Enabled => enabled && checkpointPrefab != null;
+            public GameObject CheckpointPrefab => checkpointPrefab;
+            public float FirstCheckpointDistance => Mathf.Max(1f, firstCheckpointDistance);
+            public float IntervalDistance => Mathf.Max(1f, intervalDistance);
+            public float SpawnAheadDistance => Mathf.Max(1f, spawnAheadDistance);
+            public float SkipBehindDistance => Mathf.Max(0f, skipBehindDistance);
+            public float AnchorSearchHalfRange => Mathf.Max(0.5f, anchorSearchHalfRange);
+            public float YOffset => yOffset;
+        }
+
         [LabelText("关卡名称")]
         [SerializeField] private string levelName = "Level";
         [LabelText("关卡说明")]
@@ -89,6 +119,8 @@ public class GameProgressionConfig : ScriptableObject
         [SerializeField] private List<HazardProfile> hazards = new List<HazardProfile>();
         [LabelText("拾取物生成")]
         [SerializeField] private PickupSpawnSettings pickups = new PickupSpawnSettings();
+        [LabelText("检查点生成")]
+        [SerializeField] private CheckpointSpawnSettings checkpoints = new CheckpointSpawnSettings();
 
         public string LevelName => string.IsNullOrWhiteSpace(levelName) ? "Level" : levelName;
         public string Description => description;
@@ -101,6 +133,7 @@ public class GameProgressionConfig : ScriptableObject
         public List<ZoneGenerationRule> ZoneGenerationRules => zoneGenerationRules;
         public List<HazardProfile> Hazards => hazards;
         public PickupSpawnSettings Pickups => pickups;
+        public CheckpointSpawnSettings Checkpoints => checkpoints;
     }
 
     [Header("Flow")]

@@ -22,6 +22,7 @@ public class PickupSpawner : MonoBehaviour
     [SerializeField] private Transform pickupParent;
 
     private readonly List<GameObject> activePickups = new List<GameObject>();
+    private readonly HashSet<int> spawnedCheckpointDistances = new HashSet<int>();
     private float lastSpawnCheckX;
     private bool hasSpawnBaseline;
     private PlayerRuntimeContext playerRuntimeContext;
@@ -107,20 +108,27 @@ public class PickupSpawner : MonoBehaviour
         GameProgressionConfig.LevelDefinition levelDefinition = progressionConfig != null && levelController != null
             ? progressionConfig.GetLevel(levelController.CurrentLevelIndex)
             : null;
-        if (levelDefinition == null || levelDefinition.Pickups == null || !levelDefinition.Pickups.Enabled)
+        if (levelDefinition == null)
+        {
+            return;
+        }
+
+        if (!hasSpawnBaseline)
+        {
+            lastSpawnCheckX = playerTransform.position.x;
+            hasSpawnBaseline = true;
+        }
+
+        SpawnCheckpoints(levelDefinition);
+
+        if (levelDefinition.Pickups == null || !levelDefinition.Pickups.Enabled)
         {
             return;
         }
 
         GameProgressionConfig.LevelDefinition.PickupSpawnSettings settings = levelDefinition.Pickups;
-        if (!hasSpawnBaseline)
-        {
-            lastSpawnCheckX = playerTransform.position.x;
-            hasSpawnBaseline = true;
-            return;
-        }
 
-        if (activePickups.Count >= settings.MaxActivePickups)
+        if (GetActiveRegularPickupCount() >= settings.MaxActivePickups)
         {
             return;
         }
@@ -172,6 +180,7 @@ public class PickupSpawner : MonoBehaviour
         }
 
         activePickups.Clear();
+        spawnedCheckpointDistances.Clear();
     }
 
     private void SpawnPickup(PickupProfile profile, Vector3 spawnPosition)
@@ -189,11 +198,66 @@ public class PickupSpawner : MonoBehaviour
         PickupItem pickupItem = pickupInstance.GetComponent<PickupItem>();
         if (pickupItem == null)
         {
-            pickupItem = pickupInstance.AddComponent<PickupItem>();
+            Debug.LogError($"Pickup prefab '{profile.PickupPrefab.name}' is missing PickupItem.", profile.PickupPrefab);
+            Destroy(pickupInstance);
+            return;
         }
 
         pickupItem.Initialize(profile);
         activePickups.Add(pickupInstance);
+    }
+
+    private void SpawnCheckpoints(GameProgressionConfig.LevelDefinition levelDefinition)
+    {
+        if (levelDefinition == null || levelDefinition.Checkpoints == null || !levelDefinition.Checkpoints.Enabled)
+        {
+            return;
+        }
+
+        GameProgressionConfig.LevelDefinition.CheckpointSpawnSettings settings = levelDefinition.Checkpoints;
+        float playerDistance = sessionController != null
+            ? sessionController.GetTravelDistanceFromWorldX(playerTransform.position.x)
+            : 0f;
+        float activeCheckpointDistance = sessionController != null && sessionController.HasActiveCheckpoint
+            ? sessionController.ActiveCheckpointDistance
+            : 0f;
+        float maxCheckpointDistance = Mathf.Min(levelDefinition.TargetDistance, playerDistance + settings.SpawnAheadDistance);
+        float maxCheckpointWorldX = sessionController.LevelStartX + maxCheckpointDistance + settings.AnchorSearchHalfRange;
+
+        levelGenerator.EnsureGeneratedToWorldX(maxCheckpointWorldX);
+
+        for (float checkpointDistance = settings.FirstCheckpointDistance;
+             checkpointDistance < levelDefinition.TargetDistance;
+             checkpointDistance += settings.IntervalDistance)
+        {
+            int checkpointDistanceMeters = Mathf.RoundToInt(checkpointDistance);
+            if (spawnedCheckpointDistances.Contains(checkpointDistanceMeters))
+            {
+                continue;
+            }
+
+            if (checkpointDistance <= activeCheckpointDistance + 0.01f)
+            {
+                continue;
+            }
+
+            if (checkpointDistance < playerDistance - settings.SkipBehindDistance)
+            {
+                continue;
+            }
+
+            if (checkpointDistance > maxCheckpointDistance)
+            {
+                break;
+            }
+
+            if (!TryResolveCheckpointSpawnPosition(settings, checkpointDistance, out Vector3 spawnPosition))
+            {
+                continue;
+            }
+
+            SpawnCheckpoint(settings.CheckpointPrefab, spawnPosition, checkpointDistanceMeters);
+        }
     }
 
     private bool TryResolveRoadSpawnPosition(GameProgressionConfig.LevelDefinition.PickupSpawnSettings settings, out Vector3 spawnPosition)
@@ -207,6 +271,31 @@ public class PickupSpawner : MonoBehaviour
         float minX = playerTransform.position.x + settings.MinSpawnAheadDistance;
         float maxX = playerTransform.position.x + settings.MaxSpawnAheadDistance;
         if (!levelGenerator.TryGetRandomPickupSpawnPoint(EnvironmentType.Road, minX, maxX, settings.YOffset, out spawnPosition))
+        {
+            return false;
+        }
+
+        return !IsPickupTooClose(spawnPosition);
+    }
+
+    private bool TryResolveCheckpointSpawnPosition(
+        GameProgressionConfig.LevelDefinition.CheckpointSpawnSettings settings,
+        float checkpointDistance,
+        out Vector3 spawnPosition)
+    {
+        spawnPosition = Vector3.zero;
+        if (levelGenerator == null || sessionController == null)
+        {
+            return false;
+        }
+
+        float targetWorldX = sessionController.LevelStartX + checkpointDistance;
+        if (!levelGenerator.TryGetClosestPickupSpawnPoint(
+                EnvironmentType.Road,
+                targetWorldX,
+                settings.AnchorSearchHalfRange,
+                settings.YOffset,
+                out spawnPosition))
         {
             return false;
         }
@@ -291,6 +380,29 @@ public class PickupSpawner : MonoBehaviour
         return validProfiles[validProfiles.Count - 1];
     }
 
+    private void SpawnCheckpoint(GameObject checkpointPrefab, Vector3 spawnPosition, int checkpointDistance)
+    {
+        if (checkpointPrefab == null)
+        {
+            return;
+        }
+
+        GameObject checkpointInstance = Instantiate(checkpointPrefab, spawnPosition, Quaternion.identity, pickupParent);
+        checkpointInstance.name = $"Checkpoint_{checkpointDistance}m";
+
+        CheckpointItem checkpointItem = checkpointInstance.GetComponent<CheckpointItem>();
+        if (checkpointItem == null)
+        {
+            Debug.LogError($"Checkpoint prefab '{checkpointPrefab.name}' is missing CheckpointItem.", checkpointPrefab);
+            Destroy(checkpointInstance);
+            return;
+        }
+
+        checkpointItem.Initialize(checkpointDistance);
+        spawnedCheckpointDistances.Add(checkpointDistance);
+        activePickups.Add(checkpointInstance);
+    }
+
     private void CleanupCollectedPickups()
     {
         for (int i = activePickups.Count - 1; i >= 0; i--)
@@ -302,9 +414,25 @@ public class PickupSpawner : MonoBehaviour
         }
     }
 
+    private int GetActiveRegularPickupCount()
+    {
+        int count = 0;
+        for (int i = 0; i < activePickups.Count; i++)
+        {
+            GameObject pickup = activePickups[i];
+            if (pickup != null && pickup.GetComponent<PickupItem>() != null)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     private void HandleLevelChanged(int _)
     {
         ClearSpawnedPickups();
+        spawnedCheckpointDistances.Clear();
         hasSpawnBaseline = false;
     }
 
