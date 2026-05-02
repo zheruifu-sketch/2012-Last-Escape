@@ -69,6 +69,7 @@ public class StartPanelUI : PanelUIBase
 
     private void HandleStartClicked()
     {
+        SoundEffectPlayback.Play(SoundEffectId.Click);
         StartRequested?.Invoke();
     }
 

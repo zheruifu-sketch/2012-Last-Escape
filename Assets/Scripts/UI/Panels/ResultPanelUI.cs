@@ -89,11 +89,13 @@ public class ResultPanelUI : PanelUIBase
 
     private void HandleConfirmClicked()
     {
+        SoundEffectPlayback.Play(SoundEffectId.Click);
         ConfirmRequested?.Invoke();
     }
 
     private void HandleSecondaryClicked()
     {
+        SoundEffectPlayback.Play(SoundEffectId.Click);
         SecondaryRequested?.Invoke();
     }
 

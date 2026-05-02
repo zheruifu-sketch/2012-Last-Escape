@@ -205,6 +205,7 @@ public class GameFlowController : MonoBehaviour
 
         if (currentLevel < levelCount)
         {
+            SoundEffectPlayback.Play(SoundEffectId.Success);
             string clearHint = levelController != null ? levelController.GetCurrentLevelClearHint() : $"Level {currentLevel} Clear";
             ShowHint(clearHint, transitionDelay);
             yield return new WaitForSeconds(transitionDelay);
@@ -217,6 +218,7 @@ public class GameFlowController : MonoBehaviour
             yield break;
         }
 
+        SoundEffectPlayback.Play(SoundEffectId.Success);
         ShowEndScreen();
     }
 
@@ -423,6 +425,7 @@ public class GameFlowController : MonoBehaviour
     public void HandleRunFailed(FailureType failureType)
     {
         currentFailureType = failureType;
+        SoundEffectPlayback.Play(SoundEffectId.Failure);
         Time.timeScale = 0f;
         isTransitioning = false;
         if (sessionController != null)

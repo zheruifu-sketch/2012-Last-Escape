@@ -40,6 +40,7 @@ public class PickupItem : MonoBehaviour
         }
 
         collected = true;
+        SoundEffectPlayback.Play(SoundEffectId.Pickup);
         Destroy(gameObject);
     }
 

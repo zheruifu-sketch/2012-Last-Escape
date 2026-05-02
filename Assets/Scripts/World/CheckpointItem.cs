@@ -55,6 +55,7 @@ public class CheckpointItem : MonoBehaviour
 
         sessionController.ActivateCheckpoint(transform.position);
         activated = true;
+        SoundEffectPlayback.Play(SoundEffectId.Pickup);
         Destroy(gameObject);
     }
 

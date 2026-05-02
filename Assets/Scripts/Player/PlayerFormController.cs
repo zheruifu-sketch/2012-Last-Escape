@@ -121,6 +121,7 @@ public class PlayerFormController : MonoBehaviour
         }
 
         formRoot.SetForm(targetForm);
+        SoundEffectPlayback.Play(SoundEffectId.Transform);
         if (energyController != null)
         {
             energyController.ConsumeForTransform();
