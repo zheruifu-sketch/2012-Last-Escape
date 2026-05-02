@@ -32,8 +32,8 @@ MonoBehaviour:
     coyoteTime: 0.12
     maxHumanJumpCount: 2
     groundedVelocityThreshold: 0.1
-    horizontalAcceleration: 45
-    horizontalDeceleration: 60
+    horizontalAcceleration: 200
+    horizontalDeceleration: 200
     airControlMultiplier: 0.55
     shortJumpMultiplier: 0.45
   form:
