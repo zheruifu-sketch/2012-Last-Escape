@@ -1,5 +1,6 @@
 using UnityEngine;
 using Nenn.InspectorEnhancements.Runtime.Attributes;
+using System.Collections.Generic;
 
 public class PlayerFormView : MonoBehaviour
 {
@@ -45,12 +46,14 @@ public class PlayerFormView : MonoBehaviour
     private Animator carAnimator;
     private Animator planeAnimator;
     private Animator boatAnimator;
+    private SpriteRenderer[] cachedSpriteRenderers;
 
     private void Awake()
     {
         ResolveVisualTargets();
         CacheAnimators();
         CacheBaseScales();
+        CacheSpriteRenderers();
     }
 
     public void ShowForm(PlayerFormType formType)
@@ -72,6 +75,16 @@ public class PlayerFormView : MonoBehaviour
     public void SetRunState(PlayerFormType activeForm, bool isRunning)
     {
         SetRun(ResolveAnimator(activeForm), isRunning);
+    }
+
+    public SpriteRenderer[] GetAllSpriteRenderers()
+    {
+        if (cachedSpriteRenderers == null || cachedSpriteRenderers.Length == 0)
+        {
+            CacheSpriteRenderers();
+        }
+
+        return cachedSpriteRenderers;
     }
 
     private void CacheBaseScales()
@@ -96,6 +109,16 @@ public class PlayerFormView : MonoBehaviour
         carAnimator = carObject != null ? carObject.GetComponent<Animator>() : null;
         planeAnimator = planeObject != null ? planeObject.GetComponent<Animator>() : null;
         boatAnimator = boatObject != null ? boatObject.GetComponent<Animator>() : null;
+    }
+
+    private void CacheSpriteRenderers()
+    {
+        List<SpriteRenderer> renderers = new List<SpriteRenderer>(16);
+        AppendSpriteRenderers(humanObject, renderers);
+        AppendSpriteRenderers(carObject, renderers);
+        AppendSpriteRenderers(planeObject, renderers);
+        AppendSpriteRenderers(boatObject, renderers);
+        cachedSpriteRenderers = renderers.ToArray();
     }
 
     private static void SetFormActive(GameObject target, bool active)
@@ -171,5 +194,23 @@ public class PlayerFormView : MonoBehaviour
         Vector3 nextScale = baseScale;
         nextScale.x = Mathf.Abs(baseScale.x) * (faceLeft ? 1f : -1f);
         target.localScale = nextScale;
+    }
+
+    private static void AppendSpriteRenderers(GameObject rootObject, List<SpriteRenderer> renderers)
+    {
+        if (rootObject == null || renderers == null)
+        {
+            return;
+        }
+
+        SpriteRenderer[] targets = rootObject.GetComponentsInChildren<SpriteRenderer>(true);
+        for (int i = 0; i < targets.Length; i++)
+        {
+            SpriteRenderer renderer = targets[i];
+            if (renderer != null)
+            {
+                renderers.Add(renderer);
+            }
+        }
     }
 }

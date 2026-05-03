@@ -29,6 +29,10 @@ public class PlayerRuntimeContext : MonoBehaviour
     [SerializeField] private PlayerHealthController healthController;
     [LabelText("燃油控制器")]
     [SerializeField] private PlayerFuelController fuelController;
+    [LabelText("Buff控制器")]
+    [SerializeField] private PlayerBuffController buffController;
+    [LabelText("闪烁特效控制器")]
+    [SerializeField] private PlayerFlashEffectController flashEffectController;
     [LabelText("重生控制器")]
     [SerializeField] private PlayerRespawnController respawnController;
     [LabelText("玩家调参配置")]
@@ -44,6 +48,8 @@ public class PlayerRuntimeContext : MonoBehaviour
     public PlayerHazardResolver HazardResolver => hazardResolver;
     public PlayerHealthController HealthController => healthController;
     public PlayerFuelController FuelController => fuelController;
+    public PlayerBuffController BuffController => buffController;
+    public PlayerFlashEffectController FlashEffectController => flashEffectController;
     public PlayerRespawnController RespawnController => respawnController;
     public PlayerTuningConfig TuningConfig => tuningConfig;
 
@@ -84,6 +90,8 @@ public class PlayerRuntimeContext : MonoBehaviour
         hazardResolver = hazardResolver != null ? hazardResolver : GetComponent<PlayerHazardResolver>();
         healthController = healthController != null ? healthController : GetComponent<PlayerHealthController>();
         fuelController = fuelController != null ? fuelController : GetComponent<PlayerFuelController>();
+        buffController = buffController != null ? buffController : GetComponent<PlayerBuffController>();
+        flashEffectController = flashEffectController != null ? flashEffectController : GetComponent<PlayerFlashEffectController>();
         respawnController = respawnController != null ? respawnController : GetComponent<PlayerRespawnController>();
         tuningConfig = tuningConfig != null ? tuningConfig : PlayerTuningConfig.Load();
     }

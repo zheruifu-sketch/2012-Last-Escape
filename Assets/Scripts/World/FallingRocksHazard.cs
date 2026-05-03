@@ -290,24 +290,9 @@ public class FallingRocksHazard : LevelHazardBehaviour
 
     private void ApplyRockHit()
     {
-        if (hazardProfile.FallingRocks.InstantKillOnHit)
-        {
-            if (playerHealthController != null)
-            {
-                playerHealthController.ApplyDamage(playerHealthController.MaxHealth);
-            }
-
-            if (playerRespawnController != null)
-            {
-                playerRespawnController.Respawn(FailureType.HitByFallingRock);
-            }
-
-            return;
-        }
-
         if (playerHealthController != null)
         {
-            playerHealthController.ApplyHazardDamage(Time.deltaTime);
+            playerHealthController.ApplyDamage(playerHealthController.MaxHealth * 0.25f);
             if (playerHealthController.IsDead() && playerRespawnController != null)
             {
                 playerRespawnController.Respawn(FailureType.HitByFallingRock);

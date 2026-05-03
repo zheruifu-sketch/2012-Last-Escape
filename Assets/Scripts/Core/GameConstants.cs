@@ -19,6 +19,7 @@ public static class GameConstants
     public const float DefaultCliffGroundY = 0f;
     public const float DefaultCliffDeathY = -8f;
     public const float DefaultCameraSmoothTime = 0.12f;
+    public const float DefaultTransformInvulnerabilityDuration = 1f;
 
     public static readonly Vector2 DefaultBoatSwitchCheckOffset = new Vector2(0f, -0.35f);
     public const float DefaultBoatSwitchCheckRadius = 0.2f;

@@ -6,12 +6,15 @@ public class PlayerHealthController : MonoBehaviour
 {
     [LabelText("玩家调参配置")]
     [SerializeField] private PlayerTuningConfig tuningConfig;
+    [LabelText("Buff控制器")]
+    [SerializeField] private PlayerBuffController buffController;
 
     public float MaxHealth => tuningConfig != null ? tuningConfig.Survival.MaxHealth : GameConstants.DefaultMaxHealth;
     public float HazardDamagePerSecond => tuningConfig != null ? tuningConfig.Survival.HazardDamagePerSecond : GameConstants.DefaultHazardDamagePerSecond;
     public float CurrentHealth { get; private set; }
 
     public event Action<float, float> HealthChanged;
+    public event Action<float, float, float> DamageTaken;
 
     private void Awake()
     {
@@ -19,6 +22,8 @@ public class PlayerHealthController : MonoBehaviour
         {
             tuningConfig = PlayerTuningConfig.Load();
         }
+
+        buffController = buffController != null ? buffController : GetComponent<PlayerBuffController>();
 
         CurrentHealth = MaxHealth;
         NotifyHealthChanged();
@@ -47,10 +52,16 @@ public class PlayerHealthController : MonoBehaviour
             return;
         }
 
+        if (buffController != null && buffController.HasBuff(PlayerBuffType.Invulnerability))
+        {
+            return;
+        }
+
         float previous = CurrentHealth;
         CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
         if (!Mathf.Approximately(previous, CurrentHealth))
         {
+            DamageTaken?.Invoke(CurrentHealth, MaxHealth, previous - CurrentHealth);
             NotifyHealthChanged();
         }
     }

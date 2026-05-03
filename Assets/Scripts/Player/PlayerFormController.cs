@@ -13,6 +13,8 @@ public class PlayerFormController : MonoBehaviour
     [SerializeField] private PlayerRuleController ruleController;
     [LabelText("燃油控制器")]
     [SerializeField] private PlayerFuelController fuelController;
+    [LabelText("Buff控制器")]
+    [SerializeField] private PlayerBuffController buffController;
     [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
     [LabelText("玩家调参配置")]
@@ -46,6 +48,7 @@ public class PlayerFormController : MonoBehaviour
         inputReader = inputReader != null ? inputReader : GetComponent<PlayerInputReader>();
         ruleController = ruleController != null ? ruleController : GetComponent<PlayerRuleController>();
         fuelController = fuelController != null ? fuelController : GetComponent<PlayerFuelController>();
+        buffController = buffController != null ? buffController : GetComponent<PlayerBuffController>();
     }
 
     private void OnEnable()
@@ -103,6 +106,8 @@ public class PlayerFormController : MonoBehaviour
         {
             fuelController.ConsumeForTransform();
         }
+
+        ApplyTransformBuff();
     }
 
     private bool CanUseForm(PlayerFormType targetForm)
@@ -156,5 +161,23 @@ public class PlayerFormController : MonoBehaviour
         {
             formRoot.SetForm(levelController.GetFallbackUnlockedForm());
         }
+    }
+
+    private void ApplyTransformBuff()
+    {
+        if (buffController == null)
+        {
+            return;
+        }
+
+        float duration = tuningConfig != null
+            ? tuningConfig.Form.TransformInvulnerabilityDuration
+            : GameConstants.DefaultTransformInvulnerabilityDuration;
+        if (duration <= 0f)
+        {
+            return;
+        }
+
+        buffController.ApplyTimedBuff(PlayerBuffType.Invulnerability, duration);
     }
 }

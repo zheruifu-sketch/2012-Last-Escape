@@ -13,6 +13,10 @@ public class BoulderChaseHazard : LevelHazardBehaviour
     [SerializeField] private float hitPadding = 0.1f;
     [LabelText("备用命中半径")]
     [SerializeField] private float fallbackHitRadius = 1.25f;
+    [LabelText("命中后回退距离")]
+    [SerializeField] private float retreatDistanceOnHit = 8f;
+    [LabelText("命中后无敌时间")]
+    [SerializeField] private float hitCooldownDuration = 0.6f;
 
     private HazardProfile hazardProfile;
     private Transform playerTransform;
@@ -22,6 +26,7 @@ public class BoulderChaseHazard : LevelHazardBehaviour
     private Collider2D[] playerColliders;
     private float currentSpeed;
     private float fixedY;
+    private float hitCooldownTimer;
     private bool initialized;
     private bool hasTriggeredHit;
 
@@ -73,6 +78,15 @@ public class BoulderChaseHazard : LevelHazardBehaviour
         if (!initialized || hazardProfile == null)
         {
             return;
+        }
+
+        if (hitCooldownTimer > 0f)
+        {
+            hitCooldownTimer -= Time.deltaTime;
+            if (hitCooldownTimer <= 0f)
+            {
+                hasTriggeredHit = false;
+            }
         }
 
         MoveForward();
@@ -179,35 +193,31 @@ public class BoulderChaseHazard : LevelHazardBehaviour
     {
         hasTriggeredHit = true;
 
-        if (hazardProfile.BoulderChase.InstantKillOnTouch)
-        {
-            if (playerHealthController != null)
-            {
-                playerHealthController.ApplyDamage(playerHealthController.MaxHealth);
-            }
-
-            if (playerRespawnController != null)
-            {
-                playerRespawnController.Respawn(FailureType.CrushedByBoulder);
-            }
-
-            return;
-        }
-
         if (playerHealthController != null)
         {
-            playerHealthController.ApplyHazardDamage(Time.deltaTime);
+            playerHealthController.ApplyDamage(playerHealthController.MaxHealth * 0.25f);
             if (playerHealthController.IsDead() && playerRespawnController != null)
             {
                 playerRespawnController.Respawn(FailureType.CrushedByBoulder);
                 return;
             }
-
-            hasTriggeredHit = false;
         }
         else if (playerRespawnController != null)
         {
             playerRespawnController.Respawn(FailureType.CrushedByBoulder);
+            return;
         }
+
+        RetreatAfterHit();
+    }
+
+    private void RetreatAfterHit()
+    {
+        Vector3 position = transform.position;
+        position.x -= Mathf.Max(0f, retreatDistanceOnHit);
+        position.y = fixedY;
+        transform.position = position;
+
+        hitCooldownTimer = Mathf.Max(0.05f, hitCooldownDuration);
     }
 }

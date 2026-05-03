@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1261,6 +1261,7 @@ RectTransform:
   - {fileID: 1702962292}
   - {fileID: 171309215}
   - {fileID: 230069087}
+  - {fileID: 920100001}
   - {fileID: 910001001}
   - {fileID: 576621909}
   - {fileID: 478398486}
@@ -1623,7 +1624,7 @@ RectTransform:
   - {fileID: 591573172}
   - {fileID: 3027412}
   m_Father: {fileID: 259790565}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2001,7 +2002,7 @@ RectTransform:
   m_Children:
   - {fileID: 644034678}
   m_Father: {fileID: 259790565}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3026,7 +3027,7 @@ RectTransform:
   m_Children:
   - {fileID: 910001011}
   m_Father: {fileID: 259790565}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -3404,6 +3405,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910001030}
   m_CullTransparentMesh: 1
+--- !u!1 &920100000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920100001}
+  - component: {fileID: 920100002}
+  m_Layer: 5
+  m_Name: "Buff\u72B6\u6001UI"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &920100001
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920100000}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 920100011}
+  m_Father: {fileID: 259790565}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -180, y: -184}
+  m_SizeDelta: {x: 360, y: 84}
+  m_Pivot: {x: 1, y: 1}
+--- !u!114 &920100002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77ecbc104df4433dbebd9c9401362304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  root: {fileID: 0}
+  runtimeContext: {fileID: 1548789101}
+  buffController: {fileID: 1548789106}
+  slotsRoot: {fileID: 920100011}
+  slotPrefab: {fileID: 7606038085982598565, guid: b02d5250c04044b4fb26c3a0bcf2a675, type: 3}
+  maxVisibleSlots: 5
+  invulnerabilityColor: {r: 1, g: 0.9, b: 0.25, a: 1}
+  speedBoostColor: {r: 0.4, g: 1, b: 0.45, a: 1}
+  shieldColor: {r: 0.3, g: 0.8, b: 1, a: 1}
+  slowColor: {r: 1, g: 0.45, b: 0.45, a: 1}
+  fuelEfficiencyColor: {r: 1, g: 0.6, b: 0.2, a: 1}
+--- !u!1 &920100010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920100011}
+  m_Layer: 5
+  m_Name: SlotsRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &920100011
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920100010}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 920100001}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &950597140
 GameObject:
   m_ObjectHideFlags: 0
@@ -4113,7 +4211,7 @@ RectTransform:
   - {fileID: 1682654984}
   - {fileID: 2141201001}
   m_Father: {fileID: 259790565}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5264,6 +5362,8 @@ GameObject:
   - component: {fileID: 1548789101}
   - component: {fileID: 1548789098}
   - component: {fileID: 1548789099}
+  - component: {fileID: 1548789106}
+  - component: {fileID: 1548789107}
   - component: {fileID: 1548789100}
   m_Layer: 0
   m_Name: Player
@@ -5299,7 +5399,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   formRoot: {fileID: 1548789095}
   environmentContext: {fileID: 0}
-  hazardController: {fileID: 0}
   tuningConfig: {fileID: 0}
 --- !u!114 &1548789091
 MonoBehaviour:
@@ -5335,9 +5434,7 @@ MonoBehaviour:
   groundSensor: {fileID: 1548789093}
   ruleController: {fileID: 1548789090}
   inputReader: {fileID: 0}
-  hazardController: {fileID: 0}
   tuningConfig: {fileID: 0}
-  playerCollider: {fileID: 0}
 --- !u!114 &1548789093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5451,6 +5548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tuningConfig: {fileID: 0}
+  buffController: {fileID: 1548789106}
 --- !u!114 &1548789099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5533,6 +5631,8 @@ MonoBehaviour:
   hazardResolver: {fileID: 1548789104}
   healthController: {fileID: 1548789098}
   fuelController: {fileID: 1548789099}
+  buffController: {fileID: 1548789106}
+  flashEffectController: {fileID: 1548789107}
   respawnController: {fileID: 1548789091}
   tuningConfig: {fileID: 11400000, guid: c59de8ab7e7f4bf3a75ed7df87a611b2, type: 2}
 --- !u!114 &1548789102
@@ -5564,6 +5664,7 @@ MonoBehaviour:
   inputReader: {fileID: 1548789102}
   ruleController: {fileID: 1548789090}
   fuelController: {fileID: 0}
+  buffController: {fileID: 1548789106}
   levelController: {fileID: 0}
   tuningConfig: {fileID: 11400000, guid: c59de8ab7e7f4bf3a75ed7df87a611b2, type: 2}
 --- !u!114 &1548789104
@@ -5598,6 +5699,39 @@ MonoBehaviour:
   playerRigidbody: {fileID: 1548789096}
   sessionController: {fileID: 2100000003}
   levelController: {fileID: 1841644008}
+--- !u!114 &1548789106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548789088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc8782fe0a842d887c93a06f403fa9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1548789107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548789088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa8f1c4debc4f5882a28705260b0d71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  formView: {fileID: 1548789094}
+  healthController: {fileID: 1548789098}
+  sessionController: {fileID: 2100000003}
+  spawnFlashDuration: 2
+  damageFlashDuration: 0.18
+  spawnFlashInterval: 0.12
+  damageFlashInterval: 0.06
+  spawnFlashAlpha: 0.35
+  damageFlashAlpha: 0.15
 --- !u!1 &1638105069
 GameObject:
   m_ObjectHideFlags: 0

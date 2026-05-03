@@ -88,8 +88,11 @@ public class PlayerTuningConfig : ScriptableObject
     {
         [LabelText("飞机受阻时强制切回人形")]
         [SerializeField] private bool forceHumanWhenPlaneBlocked = true;
+        [LabelText("通用变形无敌时长")]
+        [SerializeField] private float transformInvulnerabilityDuration = GameConstants.DefaultTransformInvulnerabilityDuration;
 
         public bool ForceHumanWhenPlaneBlocked => forceHumanWhenPlaneBlocked;
+        public float TransformInvulnerabilityDuration => Mathf.Max(0f, transformInvulnerabilityDuration);
     }
 
     [Serializable]

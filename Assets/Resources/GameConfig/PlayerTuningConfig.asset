@@ -37,6 +37,7 @@ MonoBehaviour:
     shortJumpMultiplier: 0.45
   form:
     forceHumanWhenPlaneBlocked: 1
+    transformInvulnerabilityDuration: 1
   environmentRules:
     blizzardHumanSpeedMultiplier: 0.3
     boatSwitchCheckOffset: {x: 0, y: -0.35}
