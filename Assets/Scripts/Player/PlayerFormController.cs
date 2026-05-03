@@ -11,29 +11,12 @@ public class PlayerFormController : MonoBehaviour
     [SerializeField] private PlayerInputReader inputReader;
     [LabelText("环境规则控制器")]
     [SerializeField] private PlayerRuleController ruleController;
-    [LabelText("能量控制器")]
-    [SerializeField] private PlayerEnergyController energyController;
+    [LabelText("燃油控制器")]
+    [SerializeField] private PlayerFuelController fuelController;
     [LabelText("关卡控制器")]
     [SerializeField] private GameLevelController levelController;
     [LabelText("玩家调参配置")]
     [SerializeField] private PlayerTuningConfig tuningConfig;
-
-    private float transformCooldownRemaining;
-
-    public bool IsTransformOnCooldown => transformCooldownRemaining > 0f;
-    public float TransformCooldownNormalizedRemaining
-    {
-        get
-        {
-            float cooldown = tuningConfig != null ? tuningConfig.Form.TransformCooldown : GameConstants.DefaultTransformCooldown;
-            if (cooldown <= 0f)
-            {
-                return 0f;
-            }
-
-            return Mathf.Clamp01(transformCooldownRemaining / cooldown);
-        }
-    }
 
     private void Reset()
     {
@@ -62,7 +45,7 @@ public class PlayerFormController : MonoBehaviour
         formRoot = formRoot != null ? formRoot : GetComponent<PlayerFormRoot>();
         inputReader = inputReader != null ? inputReader : GetComponent<PlayerInputReader>();
         ruleController = ruleController != null ? ruleController : GetComponent<PlayerRuleController>();
-        energyController = energyController != null ? energyController : GetComponent<PlayerEnergyController>();
+        fuelController = fuelController != null ? fuelController : GetComponent<PlayerFuelController>();
     }
 
     private void OnEnable()
@@ -88,7 +71,6 @@ public class PlayerFormController : MonoBehaviour
 
     private void Update()
     {
-        UpdateTransformCooldown();
         HandleRequestedForm();
         ApplyForcedFormRules();
     }
@@ -96,11 +78,6 @@ public class PlayerFormController : MonoBehaviour
     private void HandleRequestedForm()
     {
         if (inputReader == null || !inputReader.RequestedFormThisFrame.HasValue)
-        {
-            return;
-        }
-
-        if (IsTransformOnCooldown)
         {
             return;
         }
@@ -122,38 +99,10 @@ public class PlayerFormController : MonoBehaviour
 
         formRoot.SetForm(targetForm);
         SoundEffectPlayback.Play(SoundEffectId.Transform);
-        if (energyController != null)
+        if (fuelController != null)
         {
-            energyController.ConsumeForTransform();
+            fuelController.ConsumeForTransform();
         }
-
-        StartTransformCooldown();
-    }
-
-    private void UpdateTransformCooldown()
-    {
-        if (transformCooldownRemaining <= 0f)
-        {
-            return;
-        }
-
-        transformCooldownRemaining -= Time.deltaTime;
-        if (transformCooldownRemaining < 0f)
-        {
-            transformCooldownRemaining = 0f;
-        }
-    }
-
-    private void StartTransformCooldown()
-    {
-        float cooldown = tuningConfig != null ? tuningConfig.Form.TransformCooldown : GameConstants.DefaultTransformCooldown;
-        if (cooldown <= 0f)
-        {
-            transformCooldownRemaining = 0f;
-            return;
-        }
-
-        transformCooldownRemaining = cooldown;
     }
 
     private bool CanUseForm(PlayerFormType targetForm)

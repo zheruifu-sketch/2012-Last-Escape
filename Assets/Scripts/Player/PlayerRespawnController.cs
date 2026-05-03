@@ -2,14 +2,14 @@ using UnityEngine;
 
 [RequireComponent(typeof(PlayerFormRoot))]
 [RequireComponent(typeof(PlayerHealthController))]
-[RequireComponent(typeof(PlayerEnergyController))]
+[RequireComponent(typeof(PlayerFuelController))]
 [RequireComponent(typeof(PlayerHazardResolver))]
 public class PlayerRespawnController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerFormRoot formRoot;
     [SerializeField] private PlayerHealthController healthController;
-    [SerializeField] private PlayerEnergyController energyController;
+    [SerializeField] private PlayerFuelController fuelController;
     [SerializeField] private PlayerHazardResolver hazardResolver;
     [SerializeField] private GameFlowController flowController;
     [SerializeField] private PlayerInputReader inputReader;
@@ -32,7 +32,7 @@ public class PlayerRespawnController : MonoBehaviour
     {
         formRoot = formRoot != null ? formRoot : GetComponent<PlayerFormRoot>();
         healthController = healthController != null ? healthController : GetComponent<PlayerHealthController>();
-        energyController = energyController != null ? energyController : GetComponent<PlayerEnergyController>();
+        fuelController = fuelController != null ? fuelController : GetComponent<PlayerFuelController>();
         hazardResolver = hazardResolver != null ? hazardResolver : GetComponent<PlayerHazardResolver>();
         flowController = flowController != null ? flowController : FindObjectOfType<GameFlowController>();
         inputReader = inputReader != null ? inputReader : GetComponent<PlayerInputReader>();
@@ -40,7 +40,7 @@ public class PlayerRespawnController : MonoBehaviour
 
     private void Update()
     {
-        UpdateEnergyAndRespawn();
+        UpdateFuelAndRespawn();
         UpdateHazardDamageAndRespawn();
     }
 
@@ -84,22 +84,22 @@ public class PlayerRespawnController : MonoBehaviour
         }
     }
 
-    private void UpdateEnergyAndRespawn()
+    private void UpdateFuelAndRespawn()
     {
-        if (formRoot == null || energyController == null)
+        if (formRoot == null || fuelController == null)
         {
             return;
         }
 
-        energyController.ConsumeByForm(formRoot.CurrentForm, Time.deltaTime);
+        fuelController.ConsumeByForm(formRoot.CurrentForm, Time.deltaTime);
         if (inputReader != null && inputReader.IsForwardBoostHeld)
         {
-            energyController.ConsumeForForwardBoost(Time.deltaTime);
+            fuelController.ConsumeForForwardBoost(Time.deltaTime);
         }
 
-        if (energyController.IsEmpty())
+        if (fuelController.IsEmpty())
         {
-            Respawn(FailureType.EnergyDepleted);
+            Respawn(FailureType.FuelDepleted);
         }
     }
 

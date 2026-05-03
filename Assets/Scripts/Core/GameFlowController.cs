@@ -230,7 +230,7 @@ public class GameFlowController : MonoBehaviour
             return;
         }
 
-        levelProgressUi.SetLevelText($"Level {levelController.CurrentLevelNumber} / {Mathf.Max(1, levelController.LevelCount)}");
+        levelProgressUi.SetLevelText($"Level {levelController.CurrentLevelNumber}");
     }
 
     private void RefreshProgressText()
@@ -243,7 +243,7 @@ public class GameFlowController : MonoBehaviour
 
         float targetDistance = GetCurrentTargetDistance();
         float currentDistance = Mathf.Clamp(GetDistanceTravelled(), 0f, targetDistance);
-        levelProgressUi.SetProgressText($"Goal {currentDistance:0}/{targetDistance:0}m");
+        levelProgressUi.SetProgressText($"{currentDistance:0}/{targetDistance:0}m");
     }
 
     private float GetCurrentTargetDistance()
@@ -493,7 +493,7 @@ public class GameFlowController : MonoBehaviour
                 return "Your plane crashed into an obstacle. Dodge earlier.";
             case FailureType.InvalidForm:
                 return "You were using the wrong form for this terrain.";
-            case FailureType.EnergyDepleted:
+            case FailureType.FuelDepleted:
                 return "Your fuel ran out before you reached safety.";
             case FailureType.CrushedByBoulder:
                 return "A boulder caught up and crushed you.";

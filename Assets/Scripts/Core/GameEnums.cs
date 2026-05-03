@@ -39,7 +39,7 @@ public enum FailureType
     FellFromCliff = 2,
     PlaneCrash = 3,
     InvalidForm = 4,
-    EnergyDepleted = 5,
+    FuelDepleted = 5,
     CrushedByBoulder = 6,
     HitByFallingRock = 7,
     HealthDepleted = 8,

@@ -66,16 +66,16 @@ public class PickupItem : MonoBehaviour
                 healthController.Heal(pickupProfile.Amount);
                 return true;
 
-            case PickupType.Energy:
-                PlayerEnergyController energyController = runtimeContext != null
-                    ? runtimeContext.EnergyController
-                    : playerObject.GetComponent<PlayerEnergyController>();
-                if (energyController == null || energyController.IsFull())
+            case PickupType.Fuel:
+                PlayerFuelController fuelController = runtimeContext != null
+                    ? runtimeContext.FuelController
+                    : playerObject.GetComponent<PlayerFuelController>();
+                if (fuelController == null || fuelController.IsFull())
                 {
                     return false;
                 }
 
-                energyController.RestoreEnergy(pickupProfile.Amount);
+                fuelController.RestoreFuel(pickupProfile.Amount);
                 return true;
         }
 

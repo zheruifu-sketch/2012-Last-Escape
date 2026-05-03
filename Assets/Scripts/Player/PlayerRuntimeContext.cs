@@ -27,8 +27,8 @@ public class PlayerRuntimeContext : MonoBehaviour
     [Header("Survival")]
     [LabelText("生命控制器")]
     [SerializeField] private PlayerHealthController healthController;
-    [LabelText("能量控制器")]
-    [SerializeField] private PlayerEnergyController energyController;
+    [LabelText("燃油控制器")]
+    [SerializeField] private PlayerFuelController fuelController;
     [LabelText("重生控制器")]
     [SerializeField] private PlayerRespawnController respawnController;
     [LabelText("玩家调参配置")]
@@ -43,7 +43,7 @@ public class PlayerRuntimeContext : MonoBehaviour
     public PlayerGroundSensor GroundSensor => groundSensor;
     public PlayerHazardResolver HazardResolver => hazardResolver;
     public PlayerHealthController HealthController => healthController;
-    public PlayerEnergyController EnergyController => energyController;
+    public PlayerFuelController FuelController => fuelController;
     public PlayerRespawnController RespawnController => respawnController;
     public PlayerTuningConfig TuningConfig => tuningConfig;
 
@@ -83,7 +83,7 @@ public class PlayerRuntimeContext : MonoBehaviour
         groundSensor = groundSensor != null ? groundSensor : GetComponent<PlayerGroundSensor>();
         hazardResolver = hazardResolver != null ? hazardResolver : GetComponent<PlayerHazardResolver>();
         healthController = healthController != null ? healthController : GetComponent<PlayerHealthController>();
-        energyController = energyController != null ? energyController : GetComponent<PlayerEnergyController>();
+        fuelController = fuelController != null ? fuelController : GetComponent<PlayerFuelController>();
         respawnController = respawnController != null ? respawnController : GetComponent<PlayerRespawnController>();
         tuningConfig = tuningConfig != null ? tuningConfig : PlayerTuningConfig.Load();
     }

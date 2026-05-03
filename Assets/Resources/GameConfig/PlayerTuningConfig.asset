@@ -23,6 +23,9 @@ MonoBehaviour:
     boatFloatSnapDeadZone: 0.08
     boatFloatActivationMargin: 0.35
     defaultForwardMultiplier: 1.6
+    forwardBoostMultiplier: 1.45
+    forwardBrakeMultiplier: 0.55
+    forwardBoostFuelCostPerSecond: 3
     humanJumpForce: 12
     humanGravityScale: 3
     carGravityScale: 4
@@ -37,7 +40,6 @@ MonoBehaviour:
     airControlMultiplier: 0.55
     shortJumpMultiplier: 0.45
   form:
-    transformCooldown: 0
     forceHumanWhenPlaneBlocked: 1
   environmentRules:
     blizzardHumanSpeedMultiplier: 0.3
@@ -47,8 +49,8 @@ MonoBehaviour:
   survival:
     maxHealth: 100
     hazardDamagePerSecond: 20
-    maxEnergy: 100
-    carEnergyCostPerSecond: 0.5
-    planeEnergyCostPerSecond: 5
-    boatEnergyCostPerSecond: 1
-    transformEnergyCost: 4
+    maxFuel: 100
+    carFuelCostPerSecond: 0.5
+    planeFuelCostPerSecond: 5
+    boatFuelCostPerSecond: 1
+    transformFuelCost: 4

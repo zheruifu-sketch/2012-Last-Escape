@@ -32,8 +32,8 @@ public class PlayerTuningConfig : ScriptableObject
         [SerializeField] private float forwardBoostMultiplier = GameConstants.DefaultForwardBoostMultiplier;
         [LabelText("自动前进减速倍率")]
         [SerializeField] private float forwardBrakeMultiplier = GameConstants.DefaultForwardBrakeMultiplier;
-        [LabelText("加速前进每秒额外耗能")]
-        [SerializeField] private float forwardBoostEnergyCostPerSecond = GameConstants.DefaultForwardBoostEnergyCostPerSecond;
+        [LabelText("加速前进每秒额外耗油")]
+        [SerializeField] private float forwardBoostFuelCostPerSecond = GameConstants.DefaultForwardBoostFuelCostPerSecond;
         [LabelText("人形跳跃力度")]
         [SerializeField] private float humanJumpForce = 9f;
         [LabelText("人形重力")]
@@ -77,9 +77,9 @@ public class PlayerTuningConfig : ScriptableObject
         public float ForwardBrakeMultiplier => forwardBrakeMultiplier > 0f
             ? Mathf.Clamp(forwardBrakeMultiplier, 0.1f, 1f)
             : GameConstants.DefaultForwardBrakeMultiplier;
-        public float ForwardBoostEnergyCostPerSecond => forwardBoostEnergyCostPerSecond > 0f
-            ? forwardBoostEnergyCostPerSecond
-            : GameConstants.DefaultForwardBoostEnergyCostPerSecond;
+        public float ForwardBoostFuelCostPerSecond => forwardBoostFuelCostPerSecond > 0f
+            ? forwardBoostFuelCostPerSecond
+            : GameConstants.DefaultForwardBoostFuelCostPerSecond;
         public float HumanJumpForce => humanJumpForce;
         public float HumanGravityScale => humanGravityScale;
         public float CarGravityScale => carGravityScale;
@@ -98,12 +98,9 @@ public class PlayerTuningConfig : ScriptableObject
     [Serializable]
     public class FormSettings
     {
-        [LabelText("变形冷却")]
-        [SerializeField] private float transformCooldown = GameConstants.DefaultTransformCooldown;
         [LabelText("飞机受阻时强制切回人形")]
         [SerializeField] private bool forceHumanWhenPlaneBlocked = true;
 
-        public float TransformCooldown => transformCooldown;
         public bool ForceHumanWhenPlaneBlocked => forceHumanWhenPlaneBlocked;
     }
 
@@ -132,24 +129,24 @@ public class PlayerTuningConfig : ScriptableObject
         [SerializeField] private float maxHealth = GameConstants.DefaultMaxHealth;
         [LabelText("危险区域每秒伤害")]
         [SerializeField] private float hazardDamagePerSecond = GameConstants.DefaultHazardDamagePerSecond;
-        [LabelText("最大能量")]
-        [SerializeField] private float maxEnergy = GameConstants.DefaultMaxEnergy;
-        [LabelText("汽车每秒能量消耗")]
-        [SerializeField] private float carEnergyCostPerSecond = GameConstants.DefaultCarEnergyCostPerSecond;
-        [LabelText("飞机每秒能量消耗")]
-        [SerializeField] private float planeEnergyCostPerSecond = GameConstants.DefaultPlaneEnergyCostPerSecond;
-        [LabelText("船每秒能量消耗")]
-        [SerializeField] private float boatEnergyCostPerSecond = GameConstants.DefaultBoatEnergyCostPerSecond;
-        [LabelText("每次变形能量消耗")]
-        [SerializeField] private float transformEnergyCost = GameConstants.DefaultTransformEnergyCost;
+        [LabelText("最大燃油")]
+        [SerializeField] private float maxFuel = GameConstants.DefaultMaxFuel;
+        [LabelText("汽车每秒耗油")]
+        [SerializeField] private float carFuelCostPerSecond = GameConstants.DefaultCarFuelCostPerSecond;
+        [LabelText("飞机每秒耗油")]
+        [SerializeField] private float planeFuelCostPerSecond = GameConstants.DefaultPlaneFuelCostPerSecond;
+        [LabelText("船每秒耗油")]
+        [SerializeField] private float boatFuelCostPerSecond = GameConstants.DefaultBoatFuelCostPerSecond;
+        [LabelText("每次变形耗油")]
+        [SerializeField] private float transformFuelCost = GameConstants.DefaultTransformFuelCost;
 
         public float MaxHealth => Mathf.Max(1f, maxHealth);
         public float HazardDamagePerSecond => Mathf.Max(0f, hazardDamagePerSecond);
-        public float MaxEnergy => Mathf.Max(1f, maxEnergy);
-        public float CarEnergyCostPerSecond => Mathf.Max(0f, carEnergyCostPerSecond);
-        public float PlaneEnergyCostPerSecond => Mathf.Max(0f, planeEnergyCostPerSecond);
-        public float BoatEnergyCostPerSecond => Mathf.Max(0f, boatEnergyCostPerSecond);
-        public float TransformEnergyCost => Mathf.Max(0f, transformEnergyCost);
+        public float MaxFuel => Mathf.Max(1f, maxFuel);
+        public float CarFuelCostPerSecond => Mathf.Max(0f, carFuelCostPerSecond);
+        public float PlaneFuelCostPerSecond => Mathf.Max(0f, planeFuelCostPerSecond);
+        public float BoatFuelCostPerSecond => Mathf.Max(0f, boatFuelCostPerSecond);
+        public float TransformFuelCost => Mathf.Max(0f, transformFuelCost);
     }
 
     [LabelText("移动参数")]

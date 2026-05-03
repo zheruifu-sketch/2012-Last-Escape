@@ -332,7 +332,7 @@ public class PickupSpawner : MonoBehaviour
 
         playerRuntimeContext = playerRuntimeContext != null ? playerRuntimeContext : (playerTransform != null ? playerTransform.GetComponent<PlayerRuntimeContext>() : null);
         PlayerHealthController healthController = playerRuntimeContext != null ? playerRuntimeContext.HealthController : null;
-        PlayerEnergyController energyController = playerRuntimeContext != null ? playerRuntimeContext.EnergyController : null;
+        PlayerFuelController fuelController = playerRuntimeContext != null ? playerRuntimeContext.FuelController : null;
 
         List<PickupProfile> validProfiles = new List<PickupProfile>();
         float totalWeight = 0f;
@@ -352,7 +352,7 @@ public class PickupSpawner : MonoBehaviour
                     continue;
                 }
 
-                if (profile.PickupType == PickupType.Energy && energyController != null && energyController.IsFull())
+                if (profile.PickupType == PickupType.Fuel && fuelController != null && fuelController.IsFull())
                 {
                     continue;
                 }
