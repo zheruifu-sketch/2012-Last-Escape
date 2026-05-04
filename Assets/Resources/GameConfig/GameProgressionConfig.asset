@@ -77,11 +77,11 @@ MonoBehaviour:
       allowedPreviousZones: 
     hazards: []
     pickups:
-      enabled: 0
-      minSpawnDistance: 17
-      spawnChance: 0.45
+      enabled: 1
+      minSpawnDistance: 18
+      spawnChance: 0.32
       maxActivePickups: 2
-      minSpawnAheadDistance: 10
+      minSpawnAheadDistance: 11
       maxSpawnAheadDistance: 18
       yOffset: -13
       profiles:
@@ -115,13 +115,14 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
-    hazards: []
+    hazards:
+    - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
     pickups:
-      enabled: 0
+      enabled: 1
       minSpawnDistance: 16
-      spawnChance: 0.5
-      maxActivePickups: 3
-      minSpawnAheadDistance: 10
+      spawnChance: 0.4
+      maxActivePickups: 2
+      minSpawnAheadDistance: 11
       maxSpawnAheadDistance: 19
       yOffset: -13
       profiles:
@@ -173,13 +174,14 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
-    hazards: []
+    hazards:
+    - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}
     pickups:
-      enabled: 0
+      enabled: 1
       minSpawnDistance: 15
-      spawnChance: 0.52
+      spawnChance: 0.46
       maxActivePickups: 3
-      minSpawnAheadDistance: 10
+      minSpawnAheadDistance: 11
       maxSpawnAheadDistance: 19
       yOffset: -13
       profiles:
@@ -231,13 +233,14 @@ MonoBehaviour:
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
-    hazards: []
+    hazards:
+    - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
     pickups:
-      enabled: 0
+      enabled: 1
       minSpawnDistance: 14
-      spawnChance: 0.55
+      spawnChance: 0.5
       maxActivePickups: 3
-      minSpawnAheadDistance: 10
+      minSpawnAheadDistance: 11
       maxSpawnAheadDistance: 20
       yOffset: -13
       profiles:
@@ -290,13 +293,14 @@ MonoBehaviour:
       canBeFirstRandomSegment: 1
       allowedPreviousZones: 
     hazards:
+    - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}
     - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
     pickups:
-      enabled: 0
+      enabled: 1
       minSpawnDistance: 13
       spawnChance: 0.55
       maxActivePickups: 3
-      minSpawnAheadDistance: 10
+      minSpawnAheadDistance: 12
       maxSpawnAheadDistance: 20
       yOffset: -13
       profiles:

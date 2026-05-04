@@ -100,12 +100,18 @@ public class PlayerTuningConfig : ScriptableObject
     {
         [LabelText("暴雪中人形速度倍率")]
         [SerializeField] private float blizzardHumanSpeedMultiplier = 0.3f;
+        [LabelText("暴雪中汽车速度倍率")]
+        [SerializeField] private float blizzardCarSpeedMultiplier = 0.72f;
+        [LabelText("暴雪中船速度倍率")]
+        [SerializeField] private float blizzardBoatSpeedMultiplier = 0.9f;
         [LabelText("切船检测偏移")]
         [SerializeField] private Vector2 boatSwitchCheckOffset = GameConstants.DefaultBoatSwitchCheckOffset;
         [LabelText("切船检测半径")]
         [SerializeField] private float boatSwitchCheckRadius = GameConstants.DefaultBoatSwitchCheckRadius;
 
         public float BlizzardHumanSpeedMultiplier => blizzardHumanSpeedMultiplier;
+        public float BlizzardCarSpeedMultiplier => Mathf.Clamp(blizzardCarSpeedMultiplier, 0.1f, 1f);
+        public float BlizzardBoatSpeedMultiplier => Mathf.Clamp(blizzardBoatSpeedMultiplier, 0.1f, 1.5f);
         public Vector2 BoatSwitchCheckOffset => boatSwitchCheckOffset;
         public float BoatSwitchCheckRadius => boatSwitchCheckRadius;
     }

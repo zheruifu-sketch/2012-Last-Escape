@@ -16,6 +16,6 @@ MonoBehaviour:
   displayName: Fuel Bottle
   pickupType: 2
   pickupPrefab: {fileID: 2593632238908505643, guid: a84ccf447dafb534c952b901b570fb06, type: 3}
-  amount: 25
+  amount: 22
   skipSpawnWhenStatIsFull: 1
-  weight: 1
+  weight: 1.35

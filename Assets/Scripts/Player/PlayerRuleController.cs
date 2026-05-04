@@ -13,7 +13,9 @@ public class PlayerRuleController : MonoBehaviour
     [SerializeField] private PlayerTuningConfig tuningConfig;
 
     public float HumanSpeedMultiplier => IsInBlizzardAsHuman() ? (tuningConfig != null ? tuningConfig.EnvironmentRules.BlizzardHumanSpeedMultiplier : 0.3f) : 1f;
+    public float CarSpeedMultiplier => IsInBlizzard() ? (tuningConfig != null ? tuningConfig.EnvironmentRules.BlizzardCarSpeedMultiplier : 0.72f) : 1f;
     public float BlizzardSlowMultiplier => tuningConfig != null ? tuningConfig.EnvironmentRules.BlizzardHumanSpeedMultiplier : 0.3f;
+    public float BlizzardBoatSpeedMultiplier => tuningConfig != null ? tuningConfig.EnvironmentRules.BlizzardBoatSpeedMultiplier : 0.9f;
 
     private void Reset()
     {

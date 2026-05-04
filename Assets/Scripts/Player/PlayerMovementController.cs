@@ -212,7 +212,7 @@ public class PlayerMovementController : MonoBehaviour
             case PlayerFormType.Car:
                 velocity.x = GetSmoothedHorizontalVelocity(
                     velocity.x,
-                    (movement != null ? movement.CarMoveSpeed : 7f) * speedMultiplier,
+                    (movement != null ? movement.CarMoveSpeed : 7f) * speedMultiplier * (ruleController != null ? ruleController.CarSpeedMultiplier : 1f),
                     IsStableGrounded(),
                     movement);
                 rb.velocity = velocity;
@@ -230,7 +230,7 @@ public class PlayerMovementController : MonoBehaviour
                 float boatSpeed = movement != null ? movement.BoatMoveSpeed : 4.5f;
                 if (ruleController != null && ruleController.IsInBlizzard())
                 {
-                    boatSpeed = (movement != null ? movement.HumanMoveSpeed : 4f) * ruleController.BlizzardSlowMultiplier;
+                    boatSpeed *= ruleController.BlizzardBoatSpeedMultiplier;
                 }
 
                 velocity.x = boatSpeed * speedMultiplier;

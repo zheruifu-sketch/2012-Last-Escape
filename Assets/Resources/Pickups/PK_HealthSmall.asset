@@ -16,6 +16,6 @@ MonoBehaviour:
   displayName: Health Bottle
   pickupType: 1
   pickupPrefab: {fileID: 2057589768345766926, guid: 7879c262816e9ff4181dd1a391129559, type: 3}
-  amount: 30
+  amount: 25
   skipSpawnWhenStatIsFull: 1
-  weight: 1
+  weight: 0.8

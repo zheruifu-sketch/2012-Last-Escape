@@ -259,7 +259,7 @@ public class EnvironmentHintUI : HudUIBase
 
     private bool IsPlayerInEnvironment(EnvironmentType environmentType)
     {
-        return environmentContext != null && environmentContext.IsInEnvironment(environmentType);
+        return environmentContext != null && environmentContext.IsInOrPreviewingEnvironment(environmentType);
     }
 
     private void ShowHint(string message, float duration)

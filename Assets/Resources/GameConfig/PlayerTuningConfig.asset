@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: PlayerTuningConfig
   m_EditorClassIdentifier: 
   movement:
-    humanMoveSpeed: 5
-    carMoveSpeed: 9
-    planeMoveSpeed: 8
-    planeVerticalSpeed: 7
-    boatMoveSpeed: 6
-    defaultForwardMultiplier: 1.6
-    forwardBoostMultiplier: 1.45
-    forwardBrakeMultiplier: 0.55
-    forwardBoostFuelCostPerSecond: 3
-    humanJumpForce: 12
+    humanMoveSpeed: 4.8
+    carMoveSpeed: 10.2
+    planeMoveSpeed: 7.6
+    planeVerticalSpeed: 6.4
+    boatMoveSpeed: 5.8
+    defaultForwardMultiplier: 1.5
+    forwardBoostMultiplier: 1.55
+    forwardBrakeMultiplier: 0.5
+    forwardBoostFuelCostPerSecond: 4.5
+    humanJumpForce: 12.5
     humanGravityScale: 3
     carGravityScale: 4
     planeGravityScale: 0
@@ -40,13 +40,15 @@ MonoBehaviour:
     transformInvulnerabilityDuration: 1
   environmentRules:
     blizzardHumanSpeedMultiplier: 0.3
+    blizzardCarSpeedMultiplier: 0.72
+    blizzardBoatSpeedMultiplier: 0.9
     boatSwitchCheckOffset: {x: 0, y: -0.35}
     boatSwitchCheckRadius: 0.2
   survival:
     maxHealth: 100
     hazardDamagePerSecond: 20
-    maxFuel: 100
-    carFuelCostPerSecond: 0.5
-    planeFuelCostPerSecond: 5
-    boatFuelCostPerSecond: 1
-    transformFuelCost: 4
+    maxFuel: 110
+    carFuelCostPerSecond: 0.85
+    planeFuelCostPerSecond: 6.5
+    boatFuelCostPerSecond: 1.15
+    transformFuelCost: 5
