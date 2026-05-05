@@ -1,11 +1,18 @@
 using System.Collections.Generic;
+using Nenn.InspectorEnhancements.Runtime.Attributes;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class LoopingBackgroundStrip2D : MonoBehaviour
 {
     [Header("References")]
+    [LabelText("关卡控制器")]
+    [SerializeField] private GameLevelController levelController;
+    [LabelText("流程配置")]
+    [SerializeField] private GameProgressionConfig progressionConfig;
+    [LabelText("目标相机")]
     [SerializeField] private Camera targetCamera;
+    [LabelText("源渲染器")]
     [SerializeField] private SpriteRenderer sourceRenderer;
 
     [Header("Follow")]
@@ -24,6 +31,8 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
 
     private void Reset()
     {
+        levelController = FindObjectOfType<GameLevelController>();
+        progressionConfig = GameProgressionConfig.Load();
         sourceRenderer = GetComponent<SpriteRenderer>();
         targetCamera = Camera.main;
     }
@@ -48,6 +57,8 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
 
         CleanupLoopTileChildren();
         Initialize();
+        BindLevelController();
+        ApplyCurrentLevelBackground();
         UpdateTiles();
     }
 
@@ -58,6 +69,7 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
             return;
         }
 
+        UnbindLevelController();
         ClearGeneratedTiles();
     }
 
@@ -83,14 +95,36 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
             sourceRenderer = GetComponent<SpriteRenderer>();
         }
 
+        if (levelController == null)
+        {
+            levelController = FindObjectOfType<GameLevelController>();
+        }
+
+        if (progressionConfig == null)
+        {
+            progressionConfig = GameProgressionConfig.Load();
+        }
+
         if (targetCamera == null)
         {
             targetCamera = Camera.main;
         }
+
+        ApplyCurrentLevelBackground();
     }
 
     private void Initialize()
     {
+        if (levelController == null)
+        {
+            levelController = FindObjectOfType<GameLevelController>();
+        }
+
+        if (progressionConfig == null)
+        {
+            progressionConfig = GameProgressionConfig.Load();
+        }
+
         if (sourceRenderer == null)
         {
             sourceRenderer = GetComponent<SpriteRenderer>();
@@ -115,6 +149,32 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
         generatedTiles[centerTileIndex] = sourceRenderer;
     }
 
+    private void BindLevelController()
+    {
+        if (levelController == null)
+        {
+            levelController = FindObjectOfType<GameLevelController>();
+        }
+
+        if (levelController == null)
+        {
+            return;
+        }
+
+        levelController.LevelChanged -= HandleLevelChanged;
+        levelController.LevelChanged += HandleLevelChanged;
+    }
+
+    private void UnbindLevelController()
+    {
+        if (levelController == null)
+        {
+            return;
+        }
+
+        levelController.LevelChanged -= HandleLevelChanged;
+    }
+
     private bool EnsureReady()
     {
         if (sourceRenderer == null || sourceRenderer.sprite == null)
@@ -134,6 +194,56 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
 
         tileWidth = sourceRenderer.bounds.size.x;
         return tileWidth > 0.001f;
+    }
+
+    private void ApplyCurrentLevelBackground()
+    {
+        if (progressionConfig == null)
+        {
+            progressionConfig = GameProgressionConfig.Load();
+        }
+
+        if (levelController == null || progressionConfig == null)
+        {
+            return;
+        }
+
+        GameProgressionConfig.LevelDefinition levelDefinition = progressionConfig.GetLevel(levelController.CurrentLevelIndex);
+        if (levelDefinition == null || levelDefinition.BackgroundSprite == null)
+        {
+            return;
+        }
+
+        ApplyBackgroundSprite(levelDefinition.BackgroundSprite);
+    }
+
+    private void ApplyBackgroundSprite(Sprite backgroundSprite)
+    {
+        if (sourceRenderer == null || backgroundSprite == null)
+        {
+            return;
+        }
+
+        sourceRenderer.sprite = backgroundSprite;
+        sourceRenderer.drawMode = SpriteDrawMode.Simple;
+
+        List<int> keys = new List<int>(generatedTiles.Keys);
+        for (int i = 0; i < keys.Count; i++)
+        {
+            if (!generatedTiles.TryGetValue(keys[i], out SpriteRenderer tileRenderer) || tileRenderer == null)
+            {
+                continue;
+            }
+
+            CopyRendererSettings(tileRenderer, sourceRenderer);
+        }
+
+        if (!EnsureReady())
+        {
+            return;
+        }
+
+        UpdateTiles();
     }
 
     private void UpdateTiles()
@@ -304,5 +414,10 @@ public class LoopingBackgroundStrip2D : MonoBehaviour
         target.sortingOrder = source.sortingOrder;
         target.maskInteraction = source.maskInteraction;
         target.drawMode = SpriteDrawMode.Simple;
+    }
+
+    private void HandleLevelChanged(int _)
+    {
+        ApplyCurrentLevelBackground();
     }
 }

@@ -22,19 +22,20 @@ MonoBehaviour:
       Unlocked Forms: Human, Car
 
       Goal: Reach 150m.'
+    backgroundSprite: {fileID: 21300000, guid: 53a5262438cc6414c9a3d9d9cc0bc134, type: 3}
     targetDistance: 150
     startHint: Level 1 Start
     clearHint: Level 1 Clear
     openingRoadRepeatCount: 2
     unlockedForms: 0100000002000000
-    allowedZones: 01000000
+    allowedEnvironments: 01000000
     zoneGenerationRules:
-    - zoneType: 1
+    - environmentType: 1
       weight: 3
       minConsecutiveCount: 1
       maxConsecutiveCount: 4
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards: []
     pickups:
       enabled: 0
@@ -61,20 +62,22 @@ MonoBehaviour:
 
       Unlocked Forms: Human, Car, Boat
 
-      Goal: Reach 200m.'
+      Goal: Reach
+      200m.'
+    backgroundSprite: {fileID: 21300000, guid: 624fae1c5a021534ebedfd2394043a0d, type: 3}
     targetDistance: 200
     startHint: Level 2 Start
     clearHint: Level 2 Clear
     openingRoadRepeatCount: 2
     unlockedForms: 010000000200000004000000
-    allowedZones: 04000000
+    allowedEnvironments: 04000000
     zoneGenerationRules:
-    - zoneType: 4
+    - environmentType: 4
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards: []
     pickups:
       enabled: 1
@@ -101,20 +104,22 @@ MonoBehaviour:
 
       Unlocked Forms: Human, Car, Boat, Plane
 
-      Goal: Reach 250m.'
+      Goal:
+      Reach 250m.'
+    backgroundSprite: {fileID: 21300000, guid: 51a4bc12745c3f145a0ef0a0b6ba5a39, type: 3}
     targetDistance: 250
     startHint: Level 3 Start
     clearHint: Level 3 Clear
     openingRoadRepeatCount: 1
     unlockedForms: 01000000020000000400000003000000
-    allowedZones: 02000000
+    allowedEnvironments: 02000000
     zoneGenerationRules:
-    - zoneType: 2
+    - environmentType: 2
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards:
     - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
     pickups:
@@ -142,38 +147,40 @@ MonoBehaviour:
 
       Unlocked Forms: Human, Car, Boat, Plane
 
-      Goal: Reach 300m.'
+      Goal:
+      Reach 300m.'
+    backgroundSprite: {fileID: 21300000, guid: 4a86fced1e73bcb4eaeb2b2959ecef27, type: 3}
     targetDistance: 300
     startHint: Level 4 Start
     clearHint: Level 4 Clear
     openingRoadRepeatCount: 1
     unlockedForms: 01000000020000000400000003000000
-    allowedZones: 01000000020000000300000004000000
+    allowedEnvironments: 01000000020000000300000004000000
     zoneGenerationRules:
-    - zoneType: 1
+    - environmentType: 1
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 2
+      allowedPreviousEnvironments: 
+    - environmentType: 2
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 4
+      allowedPreviousEnvironments: 
+    - environmentType: 4
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 3
+      allowedPreviousEnvironments: 
+    - environmentType: 3
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards:
     - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}
     pickups:
@@ -201,38 +208,40 @@ MonoBehaviour:
 
       Unlocked Forms: Human, Car, Boat, Plane
 
-      Goal: Reach 350m.'
+      Goal:
+      Reach 350m.'
+    backgroundSprite: {fileID: 21300000, guid: 8d551b158a297f541bfc53d98240f0ee, type: 3}
     targetDistance: 350
     startHint: Level 5 Start
     clearHint: Level 5 Clear
     openingRoadRepeatCount: 1
     unlockedForms: 01000000020000000400000003000000
-    allowedZones: 01000000020000000300000004000000
+    allowedEnvironments: 01000000020000000300000004000000
     zoneGenerationRules:
-    - zoneType: 1
+    - environmentType: 1
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 2
+      allowedPreviousEnvironments: 
+    - environmentType: 2
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 4
+      allowedPreviousEnvironments: 
+    - environmentType: 4
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 3
+      allowedPreviousEnvironments: 
+    - environmentType: 3
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards:
     - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
     pickups:
@@ -260,38 +269,40 @@ MonoBehaviour:
 
       Unlocked Forms: Human, Car, Boat, Plane
 
-      Goal: Reach 400m.'
+      Goal:
+      Reach 400m.'
+    backgroundSprite: {fileID: 21300000, guid: fb4691d4a9bca6b4b99910f995123eab, type: 3}
     targetDistance: 400
     startHint: Level 6 Start
     clearHint: Level 6 Clear
     openingRoadRepeatCount: 1
     unlockedForms: 01000000020000000400000003000000
-    allowedZones: 01000000020000000300000004000000
+    allowedEnvironments: 01000000020000000300000004000000
     zoneGenerationRules:
-    - zoneType: 1
+    - environmentType: 1
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 2
+      allowedPreviousEnvironments: 
+    - environmentType: 2
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 4
+      allowedPreviousEnvironments: 
+    - environmentType: 4
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 3
+      allowedPreviousEnvironments: 
+    - environmentType: 3
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards:
     - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}
     - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}
@@ -320,38 +331,40 @@ MonoBehaviour:
 
       Unlocked Forms: Human, Car, Boat, Plane
 
-      Goal: Reach 500m.'
+      Goal:
+      Reach 500m.'
+    backgroundSprite: {fileID: 21300000, guid: 0cce319afd3db724bbaa8cacf3423513, type: 3}
     targetDistance: 500
     startHint: Level 7 Start
     clearHint: Level 7 Clear
     openingRoadRepeatCount: 1
     unlockedForms: 01000000020000000400000003000000
-    allowedZones: 01000000020000000300000004000000
+    allowedEnvironments: 01000000020000000300000004000000
     zoneGenerationRules:
-    - zoneType: 1
+    - environmentType: 1
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 2
+      allowedPreviousEnvironments: 
+    - environmentType: 2
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 4
+      allowedPreviousEnvironments: 
+    - environmentType: 4
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
-    - zoneType: 3
+      allowedPreviousEnvironments: 
+    - environmentType: 3
       weight: 1
       minConsecutiveCount: 1
       maxConsecutiveCount: 2
       canBeFirstRandomSegment: 1
-      allowedPreviousZones: 
+      allowedPreviousEnvironments: 
     hazards:
     - {fileID: 11400000, guid: 8d4b14e359be4885a5532489a10cd7d9, type: 2}
     - {fileID: 11400000, guid: c2cb36d2212d471ab743bcc237419f4c, type: 2}

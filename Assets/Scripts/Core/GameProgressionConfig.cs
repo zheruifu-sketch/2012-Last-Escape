@@ -100,6 +100,8 @@ public class GameProgressionConfig : ScriptableObject
         [SerializeField] private string levelName = "Level";
         [LabelText("关卡说明")]
         [SerializeField] private string description = string.Empty;
+        [LabelText("关卡背景图")]
+        [SerializeField] private Sprite backgroundSprite;
         [LabelText("目标距离")]
         [SerializeField] private float targetDistance = 45f;
         [LabelText("开始提示")]
@@ -124,6 +126,7 @@ public class GameProgressionConfig : ScriptableObject
 
         public string LevelName => string.IsNullOrWhiteSpace(levelName) ? "Level" : levelName;
         public string Description => description;
+        public Sprite BackgroundSprite => backgroundSprite;
         public float TargetDistance => Mathf.Max(1f, targetDistance);
         public string StartHint => startHint;
         public string ClearHint => clearHint;
